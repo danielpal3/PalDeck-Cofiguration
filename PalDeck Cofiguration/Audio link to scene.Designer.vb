@@ -44,6 +44,7 @@ Partial Class Audio_link_to_scene
         CheckBox17 = New CheckBox()
         sav1 = New Button()
         Label3 = New Label()
+        Button1 = New Button()
         SuspendLayout()
         ' 
         ' Label1
@@ -276,11 +277,21 @@ Partial Class Audio_link_to_scene
         Label3.Size = New Size(0, 15)
         Label3.TabIndex = 34
         ' 
+        ' Button1
+        ' 
+        Button1.Location = New Point(452, 172)
+        Button1.Name = "Button1"
+        Button1.Size = New Size(75, 23)
+        Button1.TabIndex = 35
+        Button1.Text = "Button1"
+        Button1.UseVisualStyleBackColor = True
+        ' 
         ' Audio_link_to_scene
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 457)
+        Controls.Add(Button1)
         Controls.Add(Label3)
         Controls.Add(sav1)
         Controls.Add(CheckBox17)
@@ -331,4 +342,5 @@ Partial Class Audio_link_to_scene
     Friend WithEvents CheckBox17 As CheckBox
     Friend WithEvents sav1 As Button
     Friend WithEvents Label3 As Label
+    Friend WithEvents Button1 As Button
 End Class

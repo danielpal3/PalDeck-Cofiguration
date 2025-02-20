@@ -46,5 +46,26 @@ Finish:
         Dim Splitted() As String = TestToSplit.Split(New String() {Environment.NewLine}, StringSplitOptions.None)
         My.Settings.scenelink1.AddRange(Splitted)
         My.Settings.scenelink1.Add("END")
+        My.Settings.Save()
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+        Dim search As Integer = My.Settings.scenelink1.IndexOf(ComboBox1.SelectedItem)
+        Dim bool As Integer
+        If search = -1 Then
+
+        Else
+            Do
+                Label3.Text = Label3.Text & Environment.NewLine & My.Settings.scenelink1.Item(search)
+                search = search + 1
+                If My.Settings.scenelink1.Item(search) = "END" Then
+                    bool = 1
+                End If
+            Loop Until bool = 1
+        End If
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        My.Settings.scenelink1.Clear()
     End Sub
 End Class
