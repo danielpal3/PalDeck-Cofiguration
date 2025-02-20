@@ -180,7 +180,7 @@ Partial Class Form1
         ' 
         ' Connectind
         ' 
-        Connectind.Image = My.Resources.Resources.Disconnected
+        Connectind.Image = My.Resources.Resources.Connected
         Connectind.Location = New Point(852, 3)
         Connectind.Name = "Connectind"
         Connectind.Size = New Size(140, 32)

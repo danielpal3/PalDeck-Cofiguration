@@ -30,7 +30,6 @@ Public Class Form1
     End Sub
     Private Function ConnectAsync() As Await
         Dim count As Integer
-        Dim str As String
         count = 0
 
         Do
@@ -40,12 +39,10 @@ Public Class Form1
         Loop Until Client.IsConnected = True Or count = 5
 
         If Client.IsConnected = True Then
-            str = "C:\Users\danie\source\repos\PalDeck Cofiguration\PalDeck Cofiguration\Resources\Connected.bmp"
-            Connectind.ImageLocation = str
+            Connectind.Image = My.Resources.Connected
             checkconnect()
         Else
-            str = "C:\Users\danie\source\repos\PalDeck Cofiguration\PalDeck Cofiguration\Resources\Disconnected.bmp"
-            Connectind.ImageLocation = str
+            Connectind.Image = My.Resources.Disconnected
             If MsgBox("OBS websocket has disconnected, would you like to try and reconnect? Selecting no will close the app", vbYesNo) = vbYes Then
                 ConnectAsync()
             Else
