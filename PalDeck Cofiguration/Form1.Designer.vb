@@ -42,8 +42,16 @@ Partial Class Form1
         tryconnect = New Timer(components)
         TrackBar1 = New TrackBar()
         Label2 = New Label()
-        ComboBox2 = New ComboBox()
         audiotoscene = New Button()
+        audio1 = New Label()
+        audio2 = New Label()
+        audio3 = New Label()
+        audio4 = New Label()
+        audio5 = New Label()
+        TrackBar2 = New TrackBar()
+        TrackBar3 = New TrackBar()
+        TrackBar4 = New TrackBar()
+        TrackBar5 = New TrackBar()
         CType(BG, ComponentModel.ISupportInitialize).BeginInit()
         CType(But1, ComponentModel.ISupportInitialize).BeginInit()
         CType(But2, ComponentModel.ISupportInitialize).BeginInit()
@@ -55,6 +63,10 @@ Partial Class Form1
         CType(But5, ComponentModel.ISupportInitialize).BeginInit()
         CType(Connectind, ComponentModel.ISupportInitialize).BeginInit()
         CType(TrackBar1, ComponentModel.ISupportInitialize).BeginInit()
+        CType(TrackBar2, ComponentModel.ISupportInitialize).BeginInit()
+        CType(TrackBar3, ComponentModel.ISupportInitialize).BeginInit()
+        CType(TrackBar4, ComponentModel.ISupportInitialize).BeginInit()
+        CType(TrackBar5, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' BG
@@ -225,14 +237,6 @@ Partial Class Form1
         Label2.TabIndex = 17
         Label2.Text = "Audio sources for selected scene"
         ' 
-        ' ComboBox2
-        ' 
-        ComboBox2.FormattingEnabled = True
-        ComboBox2.Location = New Point(104, 383)
-        ComboBox2.Name = "ComboBox2"
-        ComboBox2.Size = New Size(188, 23)
-        ComboBox2.TabIndex = 18
-        ' 
         ' audiotoscene
         ' 
         audiotoscene.Location = New Point(12, 143)
@@ -242,14 +246,99 @@ Partial Class Form1
         audiotoscene.Text = "Link audio source to scene"
         audiotoscene.UseVisualStyleBackColor = True
         ' 
+        ' audio1
+        ' 
+        audio1.AutoSize = True
+        audio1.Location = New Point(251, 383)
+        audio1.Name = "audio1"
+        audio1.Size = New Size(41, 15)
+        audio1.TabIndex = 20
+        audio1.Text = "Label3"
+        ' 
+        ' audio2
+        ' 
+        audio2.AutoSize = True
+        audio2.Location = New Point(251, 430)
+        audio2.Name = "audio2"
+        audio2.Size = New Size(41, 15)
+        audio2.TabIndex = 21
+        audio2.Text = "Label4"
+        ' 
+        ' audio3
+        ' 
+        audio3.AutoSize = True
+        audio3.Location = New Point(251, 481)
+        audio3.Name = "audio3"
+        audio3.Size = New Size(41, 15)
+        audio3.TabIndex = 22
+        audio3.Text = "Label5"
+        ' 
+        ' audio4
+        ' 
+        audio4.AutoSize = True
+        audio4.Location = New Point(251, 528)
+        audio4.Name = "audio4"
+        audio4.Size = New Size(41, 15)
+        audio4.TabIndex = 23
+        audio4.Text = "Label6"
+        ' 
+        ' audio5
+        ' 
+        audio5.AutoSize = True
+        audio5.Location = New Point(251, 571)
+        audio5.Name = "audio5"
+        audio5.Size = New Size(41, 15)
+        audio5.TabIndex = 24
+        audio5.Text = "Label7"
+        ' 
+        ' TrackBar2
+        ' 
+        TrackBar2.Location = New Point(298, 430)
+        TrackBar2.Maximum = 100
+        TrackBar2.Name = "TrackBar2"
+        TrackBar2.Size = New Size(363, 45)
+        TrackBar2.TabIndex = 25
+        ' 
+        ' TrackBar3
+        ' 
+        TrackBar3.Location = New Point(298, 481)
+        TrackBar3.Maximum = 100
+        TrackBar3.Name = "TrackBar3"
+        TrackBar3.Size = New Size(363, 45)
+        TrackBar3.TabIndex = 26
+        ' 
+        ' TrackBar4
+        ' 
+        TrackBar4.Location = New Point(298, 571)
+        TrackBar4.Maximum = 100
+        TrackBar4.Name = "TrackBar4"
+        TrackBar4.Size = New Size(363, 45)
+        TrackBar4.TabIndex = 27
+        ' 
+        ' TrackBar5
+        ' 
+        TrackBar5.Location = New Point(298, 528)
+        TrackBar5.Maximum = 100
+        TrackBar5.Name = "TrackBar5"
+        TrackBar5.Size = New Size(363, 45)
+        TrackBar5.TabIndex = 28
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(995, 571)
+        ClientSize = New Size(995, 619)
         ControlBox = False
+        Controls.Add(TrackBar5)
+        Controls.Add(TrackBar4)
+        Controls.Add(TrackBar3)
+        Controls.Add(TrackBar2)
+        Controls.Add(audio5)
+        Controls.Add(audio4)
+        Controls.Add(audio3)
+        Controls.Add(audio2)
+        Controls.Add(audio1)
         Controls.Add(audiotoscene)
-        Controls.Add(ComboBox2)
         Controls.Add(Label2)
         Controls.Add(TrackBar1)
         Controls.Add(ComboBox1)
@@ -282,6 +371,10 @@ Partial Class Form1
         CType(But5, ComponentModel.ISupportInitialize).EndInit()
         CType(Connectind, ComponentModel.ISupportInitialize).EndInit()
         CType(TrackBar1, ComponentModel.ISupportInitialize).EndInit()
+        CType(TrackBar2, ComponentModel.ISupportInitialize).EndInit()
+        CType(TrackBar3, ComponentModel.ISupportInitialize).EndInit()
+        CType(TrackBar4, ComponentModel.ISupportInitialize).EndInit()
+        CType(TrackBar5, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -305,7 +398,15 @@ Partial Class Form1
     Friend WithEvents tryconnect As Timer
     Friend WithEvents TrackBar1 As TrackBar
     Friend WithEvents Label2 As Label
-    Friend WithEvents ComboBox2 As ComboBox
     Friend WithEvents audiotoscene As Button
+    Friend WithEvents audio1 As Label
+    Friend WithEvents audio2 As Label
+    Friend WithEvents audio3 As Label
+    Friend WithEvents audio4 As Label
+    Friend WithEvents audio5 As Label
+    Friend WithEvents TrackBar2 As TrackBar
+    Friend WithEvents TrackBar3 As TrackBar
+    Friend WithEvents TrackBar4 As TrackBar
+    Friend WithEvents TrackBar5 As TrackBar
 
 End Class

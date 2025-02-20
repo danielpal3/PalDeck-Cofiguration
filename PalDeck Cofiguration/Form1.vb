@@ -15,23 +15,11 @@ Public Class Form1
         End If
         ConnectAsync()
         'array of string for audio sources
-        Dim kind() As String = {"wasapi_input_capture", "wasapi_process_output_capture", "monitor_capture", "browser_source"}
-        Dim i As Integer
-
-        i = 0
 
         'get scene names and populate combobox
         For Each scene In Client.ListScenes
             ComboBox1.Items.Add(scene.Name.ToString)
         Next
-
-        'get inputs and filter using kind() array
-        Do
-            For Each source In Client.GetInputList(inputKind:=kind(i))
-                ComboBox2.Items.Add(source.InputName.ToString)
-            Next
-            i = i + 1
-        Loop Until i = kind.Count
 
     End Sub
     Private Function ConnectAsync() As Await
@@ -141,4 +129,5 @@ Public Class Form1
         'opens a new form to set up the audio links to their scenes
         Audio_link_to_scene.ShowDialog()
     End Sub
+
 End Class

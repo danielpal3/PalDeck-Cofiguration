@@ -45,6 +45,7 @@ Partial Class Audio_link_to_scene
         sav1 = New Button()
         Label3 = New Label()
         Button1 = New Button()
+        ComboBox2 = New ComboBox()
         SuspendLayout()
         ' 
         ' Label1
@@ -286,11 +287,21 @@ Partial Class Audio_link_to_scene
         Button1.Text = "Button1"
         Button1.UseVisualStyleBackColor = True
         ' 
+        ' ComboBox2
+        ' 
+        ComboBox2.FormattingEnabled = True
+        ComboBox2.Location = New Point(678, 431)
+        ComboBox2.Name = "ComboBox2"
+        ComboBox2.Size = New Size(121, 23)
+        ComboBox2.TabIndex = 36
+        ComboBox2.Visible = False
+        ' 
         ' Audio_link_to_scene
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 457)
+        Controls.Add(ComboBox2)
         Controls.Add(Button1)
         Controls.Add(Label3)
         Controls.Add(sav1)
@@ -343,4 +354,5 @@ Partial Class Audio_link_to_scene
     Friend WithEvents sav1 As Button
     Friend WithEvents Label3 As Label
     Friend WithEvents Button1 As Button
+    Friend WithEvents ComboBox2 As ComboBox
 End Class
