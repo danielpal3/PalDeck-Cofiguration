@@ -52,6 +52,12 @@ Partial Class Form1
         TrackBar3 = New TrackBar()
         TrackBar4 = New TrackBar()
         TrackBar5 = New TrackBar()
+        TrackBar6 = New TrackBar()
+        TrackBar7 = New TrackBar()
+        TrackBar8 = New TrackBar()
+        audio6 = New Label()
+        audio7 = New Label()
+        audio8 = New Label()
         CType(BG, ComponentModel.ISupportInitialize).BeginInit()
         CType(But1, ComponentModel.ISupportInitialize).BeginInit()
         CType(But2, ComponentModel.ISupportInitialize).BeginInit()
@@ -67,6 +73,9 @@ Partial Class Form1
         CType(TrackBar3, ComponentModel.ISupportInitialize).BeginInit()
         CType(TrackBar4, ComponentModel.ISupportInitialize).BeginInit()
         CType(TrackBar5, ComponentModel.ISupportInitialize).BeginInit()
+        CType(TrackBar6, ComponentModel.ISupportInitialize).BeginInit()
+        CType(TrackBar7, ComponentModel.ISupportInitialize).BeginInit()
+        CType(TrackBar8, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' BG
@@ -213,7 +222,7 @@ Partial Class Form1
         ComboBox1.FormattingEnabled = True
         ComboBox1.Location = New Point(12, 114)
         ComboBox1.Name = "ComboBox1"
-        ComboBox1.Size = New Size(121, 23)
+        ComboBox1.Size = New Size(183, 23)
         ComboBox1.TabIndex = 15
         ' 
         ' tryconnect
@@ -222,7 +231,7 @@ Partial Class Form1
         ' 
         ' TrackBar1
         ' 
-        TrackBar1.Location = New Point(298, 383)
+        TrackBar1.Location = New Point(247, 338)
         TrackBar1.Maximum = 100
         TrackBar1.Name = "TrackBar1"
         TrackBar1.Size = New Size(363, 45)
@@ -231,7 +240,7 @@ Partial Class Form1
         ' Label2
         ' 
         Label2.AutoSize = True
-        Label2.Location = New Point(109, 365)
+        Label2.Location = New Point(36, 317)
         Label2.Name = "Label2"
         Label2.Size = New Size(179, 15)
         Label2.TabIndex = 17
@@ -249,7 +258,7 @@ Partial Class Form1
         ' audio1
         ' 
         audio1.AutoSize = True
-        audio1.Location = New Point(251, 383)
+        audio1.Location = New Point(12, 338)
         audio1.Name = "audio1"
         audio1.Size = New Size(41, 15)
         audio1.TabIndex = 20
@@ -258,7 +267,7 @@ Partial Class Form1
         ' audio2
         ' 
         audio2.AutoSize = True
-        audio2.Location = New Point(251, 430)
+        audio2.Location = New Point(12, 382)
         audio2.Name = "audio2"
         audio2.Size = New Size(41, 15)
         audio2.TabIndex = 21
@@ -267,7 +276,7 @@ Partial Class Form1
         ' audio3
         ' 
         audio3.AutoSize = True
-        audio3.Location = New Point(251, 481)
+        audio3.Location = New Point(12, 424)
         audio3.Name = "audio3"
         audio3.Size = New Size(41, 15)
         audio3.TabIndex = 22
@@ -276,7 +285,7 @@ Partial Class Form1
         ' audio4
         ' 
         audio4.AutoSize = True
-        audio4.Location = New Point(251, 528)
+        audio4.Location = New Point(12, 467)
         audio4.Name = "audio4"
         audio4.Size = New Size(41, 15)
         audio4.TabIndex = 23
@@ -285,7 +294,7 @@ Partial Class Form1
         ' audio5
         ' 
         audio5.AutoSize = True
-        audio5.Location = New Point(251, 571)
+        audio5.Location = New Point(12, 510)
         audio5.Name = "audio5"
         audio5.Size = New Size(41, 15)
         audio5.TabIndex = 24
@@ -293,7 +302,7 @@ Partial Class Form1
         ' 
         ' TrackBar2
         ' 
-        TrackBar2.Location = New Point(298, 430)
+        TrackBar2.Location = New Point(247, 381)
         TrackBar2.Maximum = 100
         TrackBar2.Name = "TrackBar2"
         TrackBar2.Size = New Size(363, 45)
@@ -301,7 +310,7 @@ Partial Class Form1
         ' 
         ' TrackBar3
         ' 
-        TrackBar3.Location = New Point(298, 481)
+        TrackBar3.Location = New Point(247, 424)
         TrackBar3.Maximum = 100
         TrackBar3.Name = "TrackBar3"
         TrackBar3.Size = New Size(363, 45)
@@ -309,7 +318,7 @@ Partial Class Form1
         ' 
         ' TrackBar4
         ' 
-        TrackBar4.Location = New Point(298, 571)
+        TrackBar4.Location = New Point(247, 510)
         TrackBar4.Maximum = 100
         TrackBar4.Name = "TrackBar4"
         TrackBar4.Size = New Size(363, 45)
@@ -317,22 +326,80 @@ Partial Class Form1
         ' 
         ' TrackBar5
         ' 
-        TrackBar5.Location = New Point(298, 528)
+        TrackBar5.Location = New Point(247, 467)
         TrackBar5.Maximum = 100
         TrackBar5.Name = "TrackBar5"
         TrackBar5.Size = New Size(363, 45)
         TrackBar5.TabIndex = 28
         ' 
+        ' TrackBar6
+        ' 
+        TrackBar6.Location = New Point(247, 553)
+        TrackBar6.Maximum = 100
+        TrackBar6.Name = "TrackBar6"
+        TrackBar6.Size = New Size(363, 45)
+        TrackBar6.TabIndex = 29
+        ' 
+        ' TrackBar7
+        ' 
+        TrackBar7.Location = New Point(247, 596)
+        TrackBar7.Maximum = 100
+        TrackBar7.Name = "TrackBar7"
+        TrackBar7.Size = New Size(363, 45)
+        TrackBar7.TabIndex = 30
+        ' 
+        ' TrackBar8
+        ' 
+        TrackBar8.Location = New Point(247, 639)
+        TrackBar8.Maximum = 100
+        TrackBar8.Name = "TrackBar8"
+        TrackBar8.Size = New Size(363, 45)
+        TrackBar8.TabIndex = 31
+        ' 
+        ' audio6
+        ' 
+        audio6.AutoSize = True
+        audio6.Location = New Point(12, 553)
+        audio6.Name = "audio6"
+        audio6.Size = New Size(41, 15)
+        audio6.TabIndex = 32
+        audio6.Text = "Label7"
+        ' 
+        ' audio7
+        ' 
+        audio7.AutoSize = True
+        audio7.Location = New Point(12, 596)
+        audio7.Name = "audio7"
+        audio7.Size = New Size(41, 15)
+        audio7.TabIndex = 33
+        audio7.Text = "Label7"
+        ' 
+        ' audio8
+        ' 
+        audio8.AutoSize = True
+        audio8.Location = New Point(12, 639)
+        audio8.Name = "audio8"
+        audio8.Size = New Size(41, 15)
+        audio8.TabIndex = 34
+        audio8.Text = "Label7"
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(995, 619)
+        ClientSize = New Size(995, 674)
         ControlBox = False
-        Controls.Add(TrackBar5)
+        Controls.Add(audio8)
+        Controls.Add(audio7)
+        Controls.Add(audio6)
+        Controls.Add(TrackBar7)
+        Controls.Add(TrackBar8)
+        Controls.Add(TrackBar6)
         Controls.Add(TrackBar4)
+        Controls.Add(TrackBar5)
         Controls.Add(TrackBar3)
         Controls.Add(TrackBar2)
+        Controls.Add(TrackBar1)
         Controls.Add(audio5)
         Controls.Add(audio4)
         Controls.Add(audio3)
@@ -340,7 +407,6 @@ Partial Class Form1
         Controls.Add(audio1)
         Controls.Add(audiotoscene)
         Controls.Add(Label2)
-        Controls.Add(TrackBar1)
         Controls.Add(ComboBox1)
         Controls.Add(stob)
         Controls.Add(Connectind)
@@ -360,6 +426,7 @@ Partial Class Form1
         Name = "Form1"
         ShowIcon = False
         Text = "PalDeck Config"
+        WindowState = FormWindowState.Maximized
         CType(BG, ComponentModel.ISupportInitialize).EndInit()
         CType(But1, ComponentModel.ISupportInitialize).EndInit()
         CType(But2, ComponentModel.ISupportInitialize).EndInit()
@@ -375,6 +442,9 @@ Partial Class Form1
         CType(TrackBar3, ComponentModel.ISupportInitialize).EndInit()
         CType(TrackBar4, ComponentModel.ISupportInitialize).EndInit()
         CType(TrackBar5, ComponentModel.ISupportInitialize).EndInit()
+        CType(TrackBar6, ComponentModel.ISupportInitialize).EndInit()
+        CType(TrackBar7, ComponentModel.ISupportInitialize).EndInit()
+        CType(TrackBar8, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
         PerformLayout()
     End Sub
@@ -408,5 +478,11 @@ Partial Class Form1
     Friend WithEvents TrackBar3 As TrackBar
     Friend WithEvents TrackBar4 As TrackBar
     Friend WithEvents TrackBar5 As TrackBar
+    Friend WithEvents TrackBar6 As TrackBar
+    Friend WithEvents TrackBar7 As TrackBar
+    Friend WithEvents TrackBar8 As TrackBar
+    Friend WithEvents audio6 As Label
+    Friend WithEvents audio7 As Label
+    Friend WithEvents audio8 As Label
 
 End Class

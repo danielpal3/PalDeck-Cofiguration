@@ -5,7 +5,14 @@ Imports OBSWebsocketDotNet
 Public Class Form1
     Dim Client As New OBSWebsocket
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        audio1.Text = ""
+        audio2.Text = ""
+        audio3.Text = ""
+        audio4.Text = ""
+        audio5.Text = ""
+        audio6.Text = ""
+        audio7.Text = ""
+        audio8.Text = ""
         'start in full screen
         Me.WindowState = 2
         Me.FormBorderStyle = 0
@@ -130,4 +137,65 @@ Public Class Form1
         Audio_link_to_scene.ShowDialog()
     End Sub
 
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+        audio1.Text = ""
+        audio2.Text = ""
+        audio3.Text = ""
+        audio4.Text = ""
+        audio5.Text = ""
+        audio6.Text = ""
+        audio7.Text = ""
+        audio8.Text = ""
+        TrackBar1.Visible = True
+        TrackBar2.Visible = True
+        TrackBar3.Visible = True
+        TrackBar4.Visible = True
+        TrackBar5.Visible = True
+        TrackBar6.Visible = True
+        TrackBar7.Visible = True
+        TrackBar8.Visible = True
+
+        Dim label As Label
+        Dim search As Integer = My.Settings.scenelink1.IndexOf(ComboBox1.SelectedItem)
+        Dim bool As Integer
+        Dim i As Integer
+        i = 1
+        If search = -1 Then
+
+        Else
+            If My.Settings.scenelink1.Item(search) = ComboBox1.SelectedItem Then
+                search = search + 1
+            End If
+            Do
+                Dim name As String = ("audio" & i)
+                label = Me.Controls.Item(name)
+                If label.Text = "" Then
+                    label.Text = My.Settings.scenelink1.Item(search)
+                    search = search + 1
+                Else
+                    i = i + 1
+                End If
+
+                If My.Settings.scenelink1.Item(search) = "END" Then
+                    bool = 1
+                End If
+            Loop Until bool = 1
+        End If
+        i = 1
+
+        Do
+            Dim trackbar As TrackBar
+            Dim tname As String = ("trackbar" & i)
+            Dim name As String = ("audio" & i)
+            label = Me.Controls.Item(name)
+            If label.Text = "" Then
+                trackbar = Me.Controls.Item(tname)
+                trackbar.Visible = False
+                i = i + 1
+            Else
+                i = i + 1
+            End If
+        Loop Until i = 9
+
+    End Sub
 End Class
