@@ -46,6 +46,7 @@ Public Class Form1
             If MsgBox("OBS websocket has disconnected, would you like to try and reconnect? Selecting no will close the app", vbYesNo) = vbYes Then
                 ConnectAsync()
             Else
+                'Close application
                 Application.Exit()
 
             End If
