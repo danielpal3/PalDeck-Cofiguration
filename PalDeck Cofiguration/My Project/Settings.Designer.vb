@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("127.0.0.1")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("192.168.1.216")>  _
         Public Property ip() As String
             Get
                 Return CType(Me("ip"),String)
@@ -100,54 +100,6 @@ Namespace My
             End Get
             Set
                 Me("scenelink1") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property scenelink2() As String
-            Get
-                Return CType(Me("scenelink2"),String)
-            End Get
-            Set
-                Me("scenelink2") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property scenelink3() As String
-            Get
-                Return CType(Me("scenelink3"),String)
-            End Get
-            Set
-                Me("scenelink3") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property scenelink4() As String
-            Get
-                Return CType(Me("scenelink4"),String)
-            End Get
-            Set
-                Me("scenelink4") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property scenelink5() As String
-            Get
-                Return CType(Me("scenelink5"),String)
-            End Get
-            Set
-                Me("scenelink5") = value
             End Set
         End Property
     End Class

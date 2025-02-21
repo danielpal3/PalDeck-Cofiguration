@@ -6,6 +6,7 @@ Imports OBSWebsocketDotNet.Types
 Public Class Form1
     Dim Client As New OBSWebsocket
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        sel8.Checked = True
         audio1.Text = ""
         audio2.Text = ""
         audio3.Text = ""
@@ -217,9 +218,13 @@ Public Class Form1
                 invol = Client.GetInputVolume(label.Text)
 
                 trackbar.Value = invol.VolumeDb
-                    i = i + 1
-                End If
+                i = i + 1
+            End If
 
         Loop Until i = 9
+    End Sub
+
+    Private Sub conweb_Click(sender As Object, e As EventArgs) Handles conweb.Click
+        Websocket_Settings.ShowDialog()
     End Sub
 End Class

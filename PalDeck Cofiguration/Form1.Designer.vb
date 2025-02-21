@@ -58,6 +58,7 @@ Partial Class Form1
         audio6 = New Label()
         audio7 = New Label()
         audio8 = New Label()
+        conweb = New Button()
         CType(BG, ComponentModel.ISupportInitialize).BeginInit()
         CType(But1, ComponentModel.ISupportInitialize).BeginInit()
         CType(But2, ComponentModel.ISupportInitialize).BeginInit()
@@ -201,6 +202,7 @@ Partial Class Form1
         ' 
         ' Connectind
         ' 
+        Connectind.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         Connectind.Image = My.Resources.Resources.Connected
         Connectind.Location = New Point(852, 3)
         Connectind.Name = "Connectind"
@@ -391,12 +393,23 @@ Partial Class Form1
         audio8.TabIndex = 34
         audio8.Text = "Label7"
         ' 
+        ' conweb
+        ' 
+        conweb.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        conweb.Location = New Point(852, 41)
+        conweb.Name = "conweb"
+        conweb.Size = New Size(135, 23)
+        conweb.TabIndex = 35
+        conweb.Text = "Configure websocket"
+        conweb.UseVisualStyleBackColor = True
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(995, 674)
         ControlBox = False
+        Controls.Add(conweb)
         Controls.Add(audio8)
         Controls.Add(audio7)
         Controls.Add(audio6)
@@ -492,5 +505,6 @@ Partial Class Form1
     Friend WithEvents audio6 As Label
     Friend WithEvents audio7 As Label
     Friend WithEvents audio8 As Label
+    Friend WithEvents conweb As Button
 
 End Class
