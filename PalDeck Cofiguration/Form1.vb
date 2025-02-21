@@ -2,6 +2,7 @@
 Imports System.Threading
 Imports ICSharpCode.Decompiler.IL
 Imports OBSWebsocketDotNet
+Imports OBSWebsocketDotNet.Types
 Public Class Form1
     Dim Client As New OBSWebsocket
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -129,7 +130,12 @@ Public Class Form1
 
     Private Sub TrackBar1_Scroll(sender As Object, e As EventArgs) Handles TrackBar1.Scroll
         'using trackbar value to change volume of source in OBS
-        Client.SetInputVolume("Boom Mic", TrackBar1.Value / 100)
+        If ComboBox1.SelectedItem = Nothing Then
+
+        Else
+            Client.SetInputVolume(audio1.Text, TrackBar1.Value / 100)
+        End If
+
     End Sub
 
     Private Sub audiotoscene_Click(sender As Object, e As EventArgs) Handles audiotoscene.Click
@@ -196,6 +202,24 @@ Public Class Form1
                 i = i + 1
             End If
         Loop Until i = 9
+        i = 1
+        Do
+            Dim name As String = ("audio" & i)
+            Dim trackbar As TrackBar
+            Dim tname As String = ("trackbar" & i)
+            trackbar = Me.Controls.Item(tname)
+            label = Me.Controls.Item(name)
+            Dim invol As VolumeInfo
 
+            If label.Text = "" Then
+                i = i + 1
+            Else
+                invol = Client.GetInputVolume(label.Text)
+
+                trackbar.Value = invol.VolumeDb
+                    i = i + 1
+                End If
+
+        Loop Until i = 9
     End Sub
 End Class

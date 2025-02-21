@@ -232,7 +232,8 @@ Partial Class Form1
         ' TrackBar1
         ' 
         TrackBar1.Location = New Point(247, 338)
-        TrackBar1.Maximum = 100
+        TrackBar1.Maximum = 0
+        TrackBar1.Minimum = -60
         TrackBar1.Name = "TrackBar1"
         TrackBar1.Size = New Size(363, 45)
         TrackBar1.TabIndex = 16
@@ -303,7 +304,8 @@ Partial Class Form1
         ' TrackBar2
         ' 
         TrackBar2.Location = New Point(247, 381)
-        TrackBar2.Maximum = 100
+        TrackBar2.Maximum = 0
+        TrackBar2.Minimum = -60
         TrackBar2.Name = "TrackBar2"
         TrackBar2.Size = New Size(363, 45)
         TrackBar2.TabIndex = 25
@@ -311,7 +313,8 @@ Partial Class Form1
         ' TrackBar3
         ' 
         TrackBar3.Location = New Point(247, 424)
-        TrackBar3.Maximum = 100
+        TrackBar3.Maximum = 0
+        TrackBar3.Minimum = -60
         TrackBar3.Name = "TrackBar3"
         TrackBar3.Size = New Size(363, 45)
         TrackBar3.TabIndex = 26
@@ -319,7 +322,8 @@ Partial Class Form1
         ' TrackBar4
         ' 
         TrackBar4.Location = New Point(247, 510)
-        TrackBar4.Maximum = 100
+        TrackBar4.Maximum = 0
+        TrackBar4.Minimum = -60
         TrackBar4.Name = "TrackBar4"
         TrackBar4.Size = New Size(363, 45)
         TrackBar4.TabIndex = 27
@@ -327,7 +331,8 @@ Partial Class Form1
         ' TrackBar5
         ' 
         TrackBar5.Location = New Point(247, 467)
-        TrackBar5.Maximum = 100
+        TrackBar5.Maximum = 0
+        TrackBar5.Minimum = -60
         TrackBar5.Name = "TrackBar5"
         TrackBar5.Size = New Size(363, 45)
         TrackBar5.TabIndex = 28
@@ -335,7 +340,8 @@ Partial Class Form1
         ' TrackBar6
         ' 
         TrackBar6.Location = New Point(247, 553)
-        TrackBar6.Maximum = 100
+        TrackBar6.Maximum = 0
+        TrackBar6.Minimum = -60
         TrackBar6.Name = "TrackBar6"
         TrackBar6.Size = New Size(363, 45)
         TrackBar6.TabIndex = 29
@@ -343,7 +349,8 @@ Partial Class Form1
         ' TrackBar7
         ' 
         TrackBar7.Location = New Point(247, 596)
-        TrackBar7.Maximum = 100
+        TrackBar7.Maximum = 0
+        TrackBar7.Minimum = -60
         TrackBar7.Name = "TrackBar7"
         TrackBar7.Size = New Size(363, 45)
         TrackBar7.TabIndex = 30
@@ -351,7 +358,8 @@ Partial Class Form1
         ' TrackBar8
         ' 
         TrackBar8.Location = New Point(247, 639)
-        TrackBar8.Maximum = 100
+        TrackBar8.Maximum = 0
+        TrackBar8.Minimum = -60
         TrackBar8.Name = "TrackBar8"
         TrackBar8.Size = New Size(363, 45)
         TrackBar8.TabIndex = 31

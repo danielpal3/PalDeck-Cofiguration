@@ -9,7 +9,7 @@ Public Class Audio_link_to_scene
             'Open settings and get user to setup port access
         End If
         ConnectAsync()
-
+        ComboBox2.Items.Clear()
         Dim kind() As String = {"wasapi_input_capture", "wasapi_process_output_capture", "monitor_capture", "browser_source"}
         Dim i As Integer
         i = 0
