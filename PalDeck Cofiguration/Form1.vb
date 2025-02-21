@@ -49,12 +49,14 @@ Public Class Form1
             checkconnect()
         Else
             Connectind.Image = My.Resources.Disconnected
-            If MsgBox("OBS websocket has disconnected, would you like to try and reconnect? Selecting no will close the app", vbYesNo) = vbYes Then
-                ConnectAsync()
-            Else
-                'Close application
-                Application.Exit()
+            Disconected.ShowDialog()
 
+            If Disconected.DialogResult = 1 Then
+                ConnectAsync()
+            End If
+
+            If Disconected.DialogResult = 2 Then
+                Environment.Exit(0)
             End If
         End If
     End Function
