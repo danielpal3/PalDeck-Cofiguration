@@ -39,13 +39,13 @@ Partial Class Form1
         Button7 = New Button()
         Button8 = New Button()
         ScreenSetupGroup = New GroupBox()
-        CheckBox7 = New CheckBox()
-        CheckBox6 = New CheckBox()
-        CheckBox5 = New CheckBox()
-        CheckBox4 = New CheckBox()
-        CheckBox3 = New CheckBox()
-        CheckBox2 = New CheckBox()
-        CheckBox1 = New CheckBox()
+        custom8 = New CheckBox()
+        custom7 = New CheckBox()
+        custom6 = New CheckBox()
+        custom5 = New CheckBox()
+        custom4 = New CheckBox()
+        custom3 = New CheckBox()
+        custom2 = New CheckBox()
         Custom1 = New CheckBox()
         Button8picker = New Button()
         Button7picker = New Button()
@@ -81,18 +81,21 @@ Partial Class Form1
         Button10 = New Button()
         Button11 = New Button()
         Imageselect = New OpenFileDialog()
+        GroupBox1 = New GroupBox()
+        ButSelect = New ComboBox()
         CType(Connectind, ComponentModel.ISupportInitialize).BeginInit()
         PreviewArea.SuspendLayout()
         CType(PreviewBox, ComponentModel.ISupportInitialize).BeginInit()
         ScreenSetupGroup.SuspendLayout()
         CustomArea.SuspendLayout()
+        GroupBox1.SuspendLayout()
         SuspendLayout()
         ' 
         ' Connectind
         ' 
         Connectind.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         Connectind.Image = My.Resources.Resources.Connected
-        Connectind.Location = New Point(852, 3)
+        Connectind.Location = New Point(1305, 3)
         Connectind.Name = "Connectind"
         Connectind.Size = New Size(140, 32)
         Connectind.TabIndex = 13
@@ -105,7 +108,7 @@ Partial Class Form1
         ' conweb
         ' 
         conweb.Anchor = AnchorStyles.Top Or AnchorStyles.Right
-        conweb.Location = New Point(852, 41)
+        conweb.Location = New Point(1305, 41)
         conweb.Name = "conweb"
         conweb.Size = New Size(135, 23)
         conweb.TabIndex = 35
@@ -221,13 +224,13 @@ Partial Class Form1
         ' 
         ' ScreenSetupGroup
         ' 
-        ScreenSetupGroup.Controls.Add(CheckBox7)
-        ScreenSetupGroup.Controls.Add(CheckBox6)
-        ScreenSetupGroup.Controls.Add(CheckBox5)
-        ScreenSetupGroup.Controls.Add(CheckBox4)
-        ScreenSetupGroup.Controls.Add(CheckBox3)
-        ScreenSetupGroup.Controls.Add(CheckBox2)
-        ScreenSetupGroup.Controls.Add(CheckBox1)
+        ScreenSetupGroup.Controls.Add(custom8)
+        ScreenSetupGroup.Controls.Add(custom7)
+        ScreenSetupGroup.Controls.Add(custom6)
+        ScreenSetupGroup.Controls.Add(custom5)
+        ScreenSetupGroup.Controls.Add(custom4)
+        ScreenSetupGroup.Controls.Add(custom3)
+        ScreenSetupGroup.Controls.Add(custom2)
         ScreenSetupGroup.Controls.Add(Custom1)
         ScreenSetupGroup.Controls.Add(Button8picker)
         ScreenSetupGroup.Controls.Add(Button7picker)
@@ -269,75 +272,75 @@ Partial Class Form1
         ScreenSetupGroup.TabStop = False
         ScreenSetupGroup.Text = "Screen Setup"
         ' 
-        ' CheckBox7
+        ' custom8
         ' 
-        CheckBox7.AutoSize = True
-        CheckBox7.Location = New Point(422, 257)
-        CheckBox7.Name = "CheckBox7"
-        CheckBox7.Size = New Size(68, 19)
-        CheckBox7.TabIndex = 77
-        CheckBox7.Text = "Custom"
-        CheckBox7.UseVisualStyleBackColor = True
+        custom8.AutoSize = True
+        custom8.Location = New Point(422, 257)
+        custom8.Name = "custom8"
+        custom8.Size = New Size(68, 19)
+        custom8.TabIndex = 77
+        custom8.Text = "Custom"
+        custom8.UseVisualStyleBackColor = True
         ' 
-        ' CheckBox6
+        ' custom7
         ' 
-        CheckBox6.AutoSize = True
-        CheckBox6.Location = New Point(422, 227)
-        CheckBox6.Name = "CheckBox6"
-        CheckBox6.Size = New Size(68, 19)
-        CheckBox6.TabIndex = 76
-        CheckBox6.Text = "Custom"
-        CheckBox6.UseVisualStyleBackColor = True
+        custom7.AutoSize = True
+        custom7.Location = New Point(422, 227)
+        custom7.Name = "custom7"
+        custom7.Size = New Size(68, 19)
+        custom7.TabIndex = 76
+        custom7.Text = "Custom"
+        custom7.UseVisualStyleBackColor = True
         ' 
-        ' CheckBox5
+        ' custom6
         ' 
-        CheckBox5.AutoSize = True
-        CheckBox5.Location = New Point(422, 198)
-        CheckBox5.Name = "CheckBox5"
-        CheckBox5.Size = New Size(68, 19)
-        CheckBox5.TabIndex = 75
-        CheckBox5.Text = "Custom"
-        CheckBox5.UseVisualStyleBackColor = True
+        custom6.AutoSize = True
+        custom6.Location = New Point(422, 198)
+        custom6.Name = "custom6"
+        custom6.Size = New Size(68, 19)
+        custom6.TabIndex = 75
+        custom6.Text = "Custom"
+        custom6.UseVisualStyleBackColor = True
         ' 
-        ' CheckBox4
+        ' custom5
         ' 
-        CheckBox4.AutoSize = True
-        CheckBox4.Location = New Point(422, 170)
-        CheckBox4.Name = "CheckBox4"
-        CheckBox4.Size = New Size(68, 19)
-        CheckBox4.TabIndex = 72
-        CheckBox4.Text = "Custom"
-        CheckBox4.UseVisualStyleBackColor = True
+        custom5.AutoSize = True
+        custom5.Location = New Point(422, 170)
+        custom5.Name = "custom5"
+        custom5.Size = New Size(68, 19)
+        custom5.TabIndex = 72
+        custom5.Text = "Custom"
+        custom5.UseVisualStyleBackColor = True
         ' 
-        ' CheckBox3
+        ' custom4
         ' 
-        CheckBox3.AutoSize = True
-        CheckBox3.Location = New Point(422, 141)
-        CheckBox3.Name = "CheckBox3"
-        CheckBox3.Size = New Size(68, 19)
-        CheckBox3.TabIndex = 74
-        CheckBox3.Text = "Custom"
-        CheckBox3.UseVisualStyleBackColor = True
+        custom4.AutoSize = True
+        custom4.Location = New Point(422, 141)
+        custom4.Name = "custom4"
+        custom4.Size = New Size(68, 19)
+        custom4.TabIndex = 74
+        custom4.Text = "Custom"
+        custom4.UseVisualStyleBackColor = True
         ' 
-        ' CheckBox2
+        ' custom3
         ' 
-        CheckBox2.AutoSize = True
-        CheckBox2.Location = New Point(422, 111)
-        CheckBox2.Name = "CheckBox2"
-        CheckBox2.Size = New Size(68, 19)
-        CheckBox2.TabIndex = 73
-        CheckBox2.Text = "Custom"
-        CheckBox2.UseVisualStyleBackColor = True
+        custom3.AutoSize = True
+        custom3.Location = New Point(422, 111)
+        custom3.Name = "custom3"
+        custom3.Size = New Size(68, 19)
+        custom3.TabIndex = 73
+        custom3.Text = "Custom"
+        custom3.UseVisualStyleBackColor = True
         ' 
-        ' CheckBox1
+        ' custom2
         ' 
-        CheckBox1.AutoSize = True
-        CheckBox1.Location = New Point(422, 83)
-        CheckBox1.Name = "CheckBox1"
-        CheckBox1.Size = New Size(68, 19)
-        CheckBox1.TabIndex = 72
-        CheckBox1.Text = "Custom"
-        CheckBox1.UseVisualStyleBackColor = True
+        custom2.AutoSize = True
+        custom2.Location = New Point(422, 83)
+        custom2.Name = "custom2"
+        custom2.Size = New Size(68, 19)
+        custom2.TabIndex = 72
+        custom2.Text = "Custom"
+        custom2.UseVisualStyleBackColor = True
         ' 
         ' Custom1
         ' 
@@ -433,6 +436,7 @@ Partial Class Form1
         ' ComboBox14
         ' 
         ComboBox14.FormattingEnabled = True
+        ComboBox14.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
         ComboBox14.Location = New Point(87, 253)
         ComboBox14.Name = "ComboBox14"
         ComboBox14.Size = New Size(121, 23)
@@ -451,6 +455,7 @@ Partial Class Form1
         ' ComboBox12
         ' 
         ComboBox12.FormattingEnabled = True
+        ComboBox12.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
         ComboBox12.Location = New Point(87, 224)
         ComboBox12.Name = "ComboBox12"
         ComboBox12.Size = New Size(121, 23)
@@ -469,6 +474,7 @@ Partial Class Form1
         ' ComboBox10
         ' 
         ComboBox10.FormattingEnabled = True
+        ComboBox10.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
         ComboBox10.Location = New Point(87, 196)
         ComboBox10.Name = "ComboBox10"
         ComboBox10.Size = New Size(121, 23)
@@ -487,6 +493,7 @@ Partial Class Form1
         ' ComboBox8
         ' 
         ComboBox8.FormattingEnabled = True
+        ComboBox8.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
         ComboBox8.Location = New Point(87, 166)
         ComboBox8.Name = "ComboBox8"
         ComboBox8.Size = New Size(121, 23)
@@ -505,6 +512,7 @@ Partial Class Form1
         ' ComboBox6
         ' 
         ComboBox6.FormattingEnabled = True
+        ComboBox6.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
         ComboBox6.Location = New Point(87, 138)
         ComboBox6.Name = "ComboBox6"
         ComboBox6.Size = New Size(121, 23)
@@ -523,6 +531,7 @@ Partial Class Form1
         ' ComboBox4
         ' 
         ComboBox4.FormattingEnabled = True
+        ComboBox4.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
         ComboBox4.Location = New Point(87, 109)
         ComboBox4.Name = "ComboBox4"
         ComboBox4.Size = New Size(121, 23)
@@ -541,6 +550,7 @@ Partial Class Form1
         ' ComboBox2
         ' 
         ComboBox2.FormattingEnabled = True
+        ComboBox2.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
         ComboBox2.Location = New Point(87, 80)
         ComboBox2.Name = "ComboBox2"
         ComboBox2.Size = New Size(121, 23)
@@ -559,6 +569,7 @@ Partial Class Form1
         ' But_1_mode
         ' 
         But_1_mode.FormattingEnabled = True
+        But_1_mode.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
         But_1_mode.Location = New Point(87, 51)
         But_1_mode.Name = "But_1_mode"
         But_1_mode.Size = New Size(121, 23)
@@ -571,7 +582,7 @@ Partial Class Form1
         CustomArea.Controls.Add(TextBox1)
         CustomArea.Controls.Add(Label1)
         CustomArea.Controls.Add(CustomBut)
-        CustomArea.Location = New Point(670, 70)
+        CustomArea.Location = New Point(670, 12)
         CustomArea.Name = "CustomArea"
         CustomArea.Size = New Size(313, 563)
         CustomArea.TabIndex = 48
@@ -611,7 +622,7 @@ Partial Class Form1
         CustomBut.Name = "CustomBut"
         CustomBut.Size = New Size(121, 23)
         CustomBut.TabIndex = 0
-        CustomBut.Text = "Button Config"
+        CustomBut.Text = "Button select"
         ' 
         ' Configbut
         ' 
@@ -655,12 +666,32 @@ Partial Class Form1
         ' 
         Imageselect.FileName = "Imageselect"
         ' 
+        ' GroupBox1
+        ' 
+        GroupBox1.Controls.Add(ButSelect)
+        GroupBox1.Location = New Point(989, 12)
+        GroupBox1.Name = "GroupBox1"
+        GroupBox1.Size = New Size(275, 563)
+        GroupBox1.TabIndex = 53
+        GroupBox1.TabStop = False
+        GroupBox1.Text = "State setup"
+        ' 
+        ' ButSelect
+        ' 
+        ButSelect.FormattingEnabled = True
+        ButSelect.Location = New Point(6, 18)
+        ButSelect.Name = "ButSelect"
+        ButSelect.Size = New Size(121, 23)
+        ButSelect.TabIndex = 0
+        ButSelect.Text = "Button select"
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(995, 530)
+        ClientSize = New Size(1448, 671)
         ControlBox = False
+        Controls.Add(GroupBox1)
         Controls.Add(Button11)
         Controls.Add(Button10)
         Controls.Add(Button9)
@@ -683,6 +714,7 @@ Partial Class Form1
         ScreenSetupGroup.PerformLayout()
         CustomArea.ResumeLayout(False)
         CustomArea.PerformLayout()
+        GroupBox1.ResumeLayout(False)
         ResumeLayout(False)
     End Sub
     Friend WithEvents Connectind As PictureBox
@@ -725,14 +757,14 @@ Partial Class Form1
     Friend WithEvents Button3picker As Button
     Friend WithEvents Button2picker As Button
     Friend WithEvents Button1picker As Button
-    Friend WithEvents CheckBox1 As CheckBox
+    Friend WithEvents custom2 As CheckBox
     Friend WithEvents Custom1 As CheckBox
-    Friend WithEvents CheckBox7 As CheckBox
-    Friend WithEvents CheckBox6 As CheckBox
-    Friend WithEvents CheckBox5 As CheckBox
-    Friend WithEvents CheckBox4 As CheckBox
-    Friend WithEvents CheckBox3 As CheckBox
-    Friend WithEvents CheckBox2 As CheckBox
+    Friend WithEvents custom8 As CheckBox
+    Friend WithEvents custom7 As CheckBox
+    Friend WithEvents custom6 As CheckBox
+    Friend WithEvents custom5 As CheckBox
+    Friend WithEvents custom4 As CheckBox
+    Friend WithEvents custom3 As CheckBox
     Friend WithEvents CustomArea As GroupBox
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents Label1 As Label
@@ -743,5 +775,7 @@ Partial Class Form1
     Friend WithEvents Button10 As Button
     Friend WithEvents Button11 As Button
     Friend WithEvents Imageselect As OpenFileDialog
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents ButSelect As ComboBox
 
 End Class
