@@ -55,20 +55,20 @@ Partial Class Form1
         Button3picker = New Button()
         Button2picker = New Button()
         Button1picker = New Button()
-        ComboBox13 = New ComboBox()
-        ComboBox14 = New ComboBox()
-        ComboBox11 = New ComboBox()
-        ComboBox12 = New ComboBox()
-        ComboBox9 = New ComboBox()
-        ComboBox10 = New ComboBox()
-        ComboBox7 = New ComboBox()
-        ComboBox8 = New ComboBox()
-        ComboBox5 = New ComboBox()
-        ComboBox6 = New ComboBox()
-        ComboBox3 = New ComboBox()
-        ComboBox4 = New ComboBox()
-        ComboBox1 = New ComboBox()
-        ComboBox2 = New ComboBox()
+        But_8_Target = New ComboBox()
+        But_8_mode = New ComboBox()
+        But_7_Target = New ComboBox()
+        But_7_mode = New ComboBox()
+        But_6_Target = New ComboBox()
+        But_6_mode = New ComboBox()
+        But_5_Target = New ComboBox()
+        But_5_mode = New ComboBox()
+        But_4_Target = New ComboBox()
+        But_4_mode = New ComboBox()
+        But_3_Target = New ComboBox()
+        But_3_mode = New ComboBox()
+        But_2_Target = New ComboBox()
+        But_2_mode = New ComboBox()
         But_1_Target = New ComboBox()
         But_1_mode = New ComboBox()
         CustomArea = New GroupBox()
@@ -240,20 +240,20 @@ Partial Class Form1
         ScreenSetupGroup.Controls.Add(Button3picker)
         ScreenSetupGroup.Controls.Add(Button2picker)
         ScreenSetupGroup.Controls.Add(Button1picker)
-        ScreenSetupGroup.Controls.Add(ComboBox13)
-        ScreenSetupGroup.Controls.Add(ComboBox14)
-        ScreenSetupGroup.Controls.Add(ComboBox11)
-        ScreenSetupGroup.Controls.Add(ComboBox12)
-        ScreenSetupGroup.Controls.Add(ComboBox9)
-        ScreenSetupGroup.Controls.Add(ComboBox10)
-        ScreenSetupGroup.Controls.Add(ComboBox7)
-        ScreenSetupGroup.Controls.Add(ComboBox8)
-        ScreenSetupGroup.Controls.Add(ComboBox5)
-        ScreenSetupGroup.Controls.Add(ComboBox6)
-        ScreenSetupGroup.Controls.Add(ComboBox3)
-        ScreenSetupGroup.Controls.Add(ComboBox4)
-        ScreenSetupGroup.Controls.Add(ComboBox1)
-        ScreenSetupGroup.Controls.Add(ComboBox2)
+        ScreenSetupGroup.Controls.Add(But_8_Target)
+        ScreenSetupGroup.Controls.Add(But_8_mode)
+        ScreenSetupGroup.Controls.Add(But_7_Target)
+        ScreenSetupGroup.Controls.Add(But_7_mode)
+        ScreenSetupGroup.Controls.Add(But_6_Target)
+        ScreenSetupGroup.Controls.Add(But_6_mode)
+        ScreenSetupGroup.Controls.Add(But_5_Target)
+        ScreenSetupGroup.Controls.Add(But_5_mode)
+        ScreenSetupGroup.Controls.Add(But_4_Target)
+        ScreenSetupGroup.Controls.Add(But_4_mode)
+        ScreenSetupGroup.Controls.Add(But_3_Target)
+        ScreenSetupGroup.Controls.Add(But_3_mode)
+        ScreenSetupGroup.Controls.Add(But_2_Target)
+        ScreenSetupGroup.Controls.Add(But_2_mode)
         ScreenSetupGroup.Controls.Add(But_1_Target)
         ScreenSetupGroup.Controls.Add(But_1_mode)
         ScreenSetupGroup.Controls.Add(BackgroundBut)
@@ -424,138 +424,138 @@ Partial Class Form1
         Button1picker.Text = "Picker"
         Button1picker.UseVisualStyleBackColor = True
         ' 
-        ' ComboBox13
+        ' But_8_Target
         ' 
-        ComboBox13.FormattingEnabled = True
-        ComboBox13.Location = New Point(214, 254)
-        ComboBox13.Name = "ComboBox13"
-        ComboBox13.Size = New Size(121, 23)
-        ComboBox13.TabIndex = 62
-        ComboBox13.Text = "Button Target"
+        But_8_Target.FormattingEnabled = True
+        But_8_Target.Location = New Point(214, 254)
+        But_8_Target.Name = "But_8_Target"
+        But_8_Target.Size = New Size(121, 23)
+        But_8_Target.TabIndex = 62
+        But_8_Target.Text = "Button Target"
         ' 
-        ' ComboBox14
+        ' But_8_mode
         ' 
-        ComboBox14.FormattingEnabled = True
-        ComboBox14.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
-        ComboBox14.Location = New Point(87, 253)
-        ComboBox14.Name = "ComboBox14"
-        ComboBox14.Size = New Size(121, 23)
-        ComboBox14.TabIndex = 61
-        ComboBox14.Text = "Button Mode"
+        But_8_mode.FormattingEnabled = True
+        But_8_mode.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
+        But_8_mode.Location = New Point(87, 253)
+        But_8_mode.Name = "But_8_mode"
+        But_8_mode.Size = New Size(121, 23)
+        But_8_mode.TabIndex = 61
+        But_8_mode.Text = "Button Mode"
         ' 
-        ' ComboBox11
+        ' But_7_Target
         ' 
-        ComboBox11.FormattingEnabled = True
-        ComboBox11.Location = New Point(214, 225)
-        ComboBox11.Name = "ComboBox11"
-        ComboBox11.Size = New Size(121, 23)
-        ComboBox11.TabIndex = 60
-        ComboBox11.Text = "Button Target"
+        But_7_Target.FormattingEnabled = True
+        But_7_Target.Location = New Point(214, 225)
+        But_7_Target.Name = "But_7_Target"
+        But_7_Target.Size = New Size(121, 23)
+        But_7_Target.TabIndex = 60
+        But_7_Target.Text = "Button Target"
         ' 
-        ' ComboBox12
+        ' But_7_mode
         ' 
-        ComboBox12.FormattingEnabled = True
-        ComboBox12.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
-        ComboBox12.Location = New Point(87, 224)
-        ComboBox12.Name = "ComboBox12"
-        ComboBox12.Size = New Size(121, 23)
-        ComboBox12.TabIndex = 59
-        ComboBox12.Text = "Button Mode"
+        But_7_mode.FormattingEnabled = True
+        But_7_mode.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
+        But_7_mode.Location = New Point(87, 224)
+        But_7_mode.Name = "But_7_mode"
+        But_7_mode.Size = New Size(121, 23)
+        But_7_mode.TabIndex = 59
+        But_7_mode.Text = "Button Mode"
         ' 
-        ' ComboBox9
+        ' But_6_Target
         ' 
-        ComboBox9.FormattingEnabled = True
-        ComboBox9.Location = New Point(214, 197)
-        ComboBox9.Name = "ComboBox9"
-        ComboBox9.Size = New Size(121, 23)
-        ComboBox9.TabIndex = 58
-        ComboBox9.Text = "Button Target"
+        But_6_Target.FormattingEnabled = True
+        But_6_Target.Location = New Point(214, 197)
+        But_6_Target.Name = "But_6_Target"
+        But_6_Target.Size = New Size(121, 23)
+        But_6_Target.TabIndex = 58
+        But_6_Target.Text = "Button Target"
         ' 
-        ' ComboBox10
+        ' But_6_mode
         ' 
-        ComboBox10.FormattingEnabled = True
-        ComboBox10.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
-        ComboBox10.Location = New Point(87, 196)
-        ComboBox10.Name = "ComboBox10"
-        ComboBox10.Size = New Size(121, 23)
-        ComboBox10.TabIndex = 57
-        ComboBox10.Text = "Button Mode"
+        But_6_mode.FormattingEnabled = True
+        But_6_mode.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
+        But_6_mode.Location = New Point(87, 196)
+        But_6_mode.Name = "But_6_mode"
+        But_6_mode.Size = New Size(121, 23)
+        But_6_mode.TabIndex = 57
+        But_6_mode.Text = "Button Mode"
         ' 
-        ' ComboBox7
+        ' But_5_Target
         ' 
-        ComboBox7.FormattingEnabled = True
-        ComboBox7.Location = New Point(214, 167)
-        ComboBox7.Name = "ComboBox7"
-        ComboBox7.Size = New Size(121, 23)
-        ComboBox7.TabIndex = 56
-        ComboBox7.Text = "Button Target"
+        But_5_Target.FormattingEnabled = True
+        But_5_Target.Location = New Point(214, 167)
+        But_5_Target.Name = "But_5_Target"
+        But_5_Target.Size = New Size(121, 23)
+        But_5_Target.TabIndex = 56
+        But_5_Target.Text = "Button Target"
         ' 
-        ' ComboBox8
+        ' But_5_mode
         ' 
-        ComboBox8.FormattingEnabled = True
-        ComboBox8.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
-        ComboBox8.Location = New Point(87, 166)
-        ComboBox8.Name = "ComboBox8"
-        ComboBox8.Size = New Size(121, 23)
-        ComboBox8.TabIndex = 55
-        ComboBox8.Text = "Button Mode"
+        But_5_mode.FormattingEnabled = True
+        But_5_mode.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
+        But_5_mode.Location = New Point(87, 166)
+        But_5_mode.Name = "But_5_mode"
+        But_5_mode.Size = New Size(121, 23)
+        But_5_mode.TabIndex = 55
+        But_5_mode.Text = "Button Mode"
         ' 
-        ' ComboBox5
+        ' But_4_Target
         ' 
-        ComboBox5.FormattingEnabled = True
-        ComboBox5.Location = New Point(214, 139)
-        ComboBox5.Name = "ComboBox5"
-        ComboBox5.Size = New Size(121, 23)
-        ComboBox5.TabIndex = 54
-        ComboBox5.Text = "Button Target"
+        But_4_Target.FormattingEnabled = True
+        But_4_Target.Location = New Point(214, 139)
+        But_4_Target.Name = "But_4_Target"
+        But_4_Target.Size = New Size(121, 23)
+        But_4_Target.TabIndex = 54
+        But_4_Target.Text = "Button Target"
         ' 
-        ' ComboBox6
+        ' But_4_mode
         ' 
-        ComboBox6.FormattingEnabled = True
-        ComboBox6.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
-        ComboBox6.Location = New Point(87, 138)
-        ComboBox6.Name = "ComboBox6"
-        ComboBox6.Size = New Size(121, 23)
-        ComboBox6.TabIndex = 53
-        ComboBox6.Text = "Button Mode"
+        But_4_mode.FormattingEnabled = True
+        But_4_mode.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
+        But_4_mode.Location = New Point(87, 138)
+        But_4_mode.Name = "But_4_mode"
+        But_4_mode.Size = New Size(121, 23)
+        But_4_mode.TabIndex = 53
+        But_4_mode.Text = "Button Mode"
         ' 
-        ' ComboBox3
+        ' But_3_Target
         ' 
-        ComboBox3.FormattingEnabled = True
-        ComboBox3.Location = New Point(214, 110)
-        ComboBox3.Name = "ComboBox3"
-        ComboBox3.Size = New Size(121, 23)
-        ComboBox3.TabIndex = 52
-        ComboBox3.Text = "Button Target"
+        But_3_Target.FormattingEnabled = True
+        But_3_Target.Location = New Point(214, 110)
+        But_3_Target.Name = "But_3_Target"
+        But_3_Target.Size = New Size(121, 23)
+        But_3_Target.TabIndex = 52
+        But_3_Target.Text = "Button Target"
         ' 
-        ' ComboBox4
+        ' But_3_mode
         ' 
-        ComboBox4.FormattingEnabled = True
-        ComboBox4.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
-        ComboBox4.Location = New Point(87, 109)
-        ComboBox4.Name = "ComboBox4"
-        ComboBox4.Size = New Size(121, 23)
-        ComboBox4.TabIndex = 51
-        ComboBox4.Text = "Button Mode"
+        But_3_mode.FormattingEnabled = True
+        But_3_mode.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
+        But_3_mode.Location = New Point(87, 109)
+        But_3_mode.Name = "But_3_mode"
+        But_3_mode.Size = New Size(121, 23)
+        But_3_mode.TabIndex = 51
+        But_3_mode.Text = "Button Mode"
         ' 
-        ' ComboBox1
+        ' But_2_Target
         ' 
-        ComboBox1.FormattingEnabled = True
-        ComboBox1.Location = New Point(214, 81)
-        ComboBox1.Name = "ComboBox1"
-        ComboBox1.Size = New Size(121, 23)
-        ComboBox1.TabIndex = 50
-        ComboBox1.Text = "Button Target"
+        But_2_Target.FormattingEnabled = True
+        But_2_Target.Location = New Point(214, 81)
+        But_2_Target.Name = "But_2_Target"
+        But_2_Target.Size = New Size(121, 23)
+        But_2_Target.TabIndex = 50
+        But_2_Target.Text = "Button Target"
         ' 
-        ' ComboBox2
+        ' But_2_mode
         ' 
-        ComboBox2.FormattingEnabled = True
-        ComboBox2.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
-        ComboBox2.Location = New Point(87, 80)
-        ComboBox2.Name = "ComboBox2"
-        ComboBox2.Size = New Size(121, 23)
-        ComboBox2.TabIndex = 49
-        ComboBox2.Text = "Button Mode"
+        But_2_mode.FormattingEnabled = True
+        But_2_mode.Items.AddRange(New Object() {"New screen", "Toggle", "Toggle with error"})
+        But_2_mode.Location = New Point(87, 80)
+        But_2_mode.Name = "But_2_mode"
+        But_2_mode.Size = New Size(121, 23)
+        But_2_mode.TabIndex = 49
+        But_2_mode.Text = "Button Mode"
         ' 
         ' But_1_Target
         ' 
@@ -733,20 +733,20 @@ Partial Class Form1
     Friend WithEvents Button7 As Button
     Friend WithEvents Button8 As Button
     Friend WithEvents ScreenSetupGroup As GroupBox
-    Friend WithEvents ComboBox13 As ComboBox
-    Friend WithEvents ComboBox14 As ComboBox
-    Friend WithEvents ComboBox11 As ComboBox
-    Friend WithEvents ComboBox12 As ComboBox
-    Friend WithEvents ComboBox9 As ComboBox
-    Friend WithEvents ComboBox10 As ComboBox
-    Friend WithEvents ComboBox7 As ComboBox
-    Friend WithEvents ComboBox8 As ComboBox
-    Friend WithEvents ComboBox5 As ComboBox
-    Friend WithEvents ComboBox6 As ComboBox
-    Friend WithEvents ComboBox3 As ComboBox
-    Friend WithEvents ComboBox4 As ComboBox
-    Friend WithEvents ComboBox1 As ComboBox
-    Friend WithEvents ComboBox2 As ComboBox
+    Friend WithEvents But_8_Target As ComboBox
+    Friend WithEvents But_8_mode As ComboBox
+    Friend WithEvents But_7_Target As ComboBox
+    Friend WithEvents But_7_mode As ComboBox
+    Friend WithEvents But_6_Target As ComboBox
+    Friend WithEvents But_6_mode As ComboBox
+    Friend WithEvents But_5_Target As ComboBox
+    Friend WithEvents But_5_mode As ComboBox
+    Friend WithEvents But_4_Target As ComboBox
+    Friend WithEvents But_4_mode As ComboBox
+    Friend WithEvents But_3_Target As ComboBox
+    Friend WithEvents But_3_mode As ComboBox
+    Friend WithEvents But_2_Target As ComboBox
+    Friend WithEvents But_2_mode As ComboBox
     Friend WithEvents But_1_Target As ComboBox
     Friend WithEvents But_1_mode As ComboBox
     Friend WithEvents Button8picker As Button

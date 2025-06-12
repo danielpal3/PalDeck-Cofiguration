@@ -24,7 +24,7 @@ Public Class Audio_link_to_scene
             i = i + 1
         Loop
         i = 0
-        For Each item In Form1.ComboBox1.Items
+        For Each item In Form1.But_2_Target.Items
             ComboBox1.Items.Add(item.ToString)
         Next
         Dim i2 As Integer

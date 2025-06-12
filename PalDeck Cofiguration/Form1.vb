@@ -15,6 +15,14 @@ Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        But_1_Target.Enabled = False
+        But_2_Target.Enabled = False
+        But_3_Target.Enabled = False
+        But_4_Target.Enabled = False
+        But_5_Target.Enabled = False
+        But_6_Target.Enabled = False
+        But_7_Target.Enabled = False
+        But_8_Target.Enabled = False
         ' Assign Tag values to buttons so we can use them as an index
         Button1.Tag = 0
         Button2.Tag = 1
@@ -32,6 +40,22 @@ Public Class Form1
         custom6.Tag = 5
         custom7.Tag = 6
         custom8.Tag = 7
+        But_1_mode.Tag = 0
+        But_2_mode.Tag = 1
+        But_3_mode.Tag = 2
+        But_4_mode.Tag = 3
+        But_5_mode.Tag = 4
+        But_6_mode.Tag = 5
+        But_7_mode.Tag = 6
+        But_8_mode.Tag = 7
+        But_1_Target.Tag = 0
+        But_2_Target.Tag = 1
+        But_3_Target.Tag = 2
+        But_4_Target.Tag = 3
+        But_5_Target.Tag = 4
+        But_6_Target.Tag = 5
+        But_7_Target.Tag = 6
+        But_8_Target.Tag = 7
 
         PreviewBox.Image = New Bitmap(PreviewBox.Width, PreviewBox.Height)
 
@@ -46,7 +70,7 @@ Public Class Form1
 
         'get scene names and populate combobox
         For Each scene In Client.ListScenes
-            ComboBox1.Items.Add(scene.Name.ToString)
+            But_2_Target.Items.Add(scene.Name.ToString)
         Next
 
     End Sub
@@ -206,4 +230,36 @@ Public Class Form1
             End If
         Next
     End Sub
+
+    Private Sub But_Mode_Changed(sender As Object, e As EventArgs) _
+    Handles But_1_mode.SelectedIndexChanged, But_2_mode.SelectedIndexChanged,
+            But_3_mode.SelectedIndexChanged, But_4_mode.SelectedIndexChanged,
+            But_5_mode.SelectedIndexChanged, But_6_mode.SelectedIndexChanged,
+            But_7_mode.SelectedIndexChanged, But_8_mode.SelectedIndexChanged
+
+        Dim modeBox As ComboBox = CType(sender, ComboBox)
+        Dim tagIndex As Integer = CInt(modeBox.Tag)
+
+        ' Get the selected action
+        Dim selectedAction As String = modeBox.SelectedItem.ToString()
+
+        ' Use the form’s Controls collection to find the matching Target box
+        Dim targetName As String = $"But_{tagIndex + 1}_Target"
+        Dim targetBox As Control = Me.Controls.Find(targetName, True).FirstOrDefault()
+
+        If targetBox IsNot Nothing Then
+            ' Enable only if mode is "New Page"
+            If selectedAction = "New screen" Then
+                targetBox.Enabled = True
+            Else
+                targetBox.Enabled = False
+                If TypeOf targetBox Is TextBox Then
+                    CType(targetBox, TextBox).Text = ""
+                ElseIf TypeOf targetBox Is ComboBox Then
+                    CType(targetBox, ComboBox).SelectedIndex = -1
+                End If
+            End If
+        End If
+    End Sub
+
 End Class
