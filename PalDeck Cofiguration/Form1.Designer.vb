@@ -83,6 +83,7 @@ Partial Class Form1
         Imageselect = New OpenFileDialog()
         GroupBox1 = New GroupBox()
         ButSelect = New ComboBox()
+        Savebut = New Button()
         CType(Connectind, ComponentModel.ISupportInitialize).BeginInit()
         PreviewArea.SuspendLayout()
         CType(PreviewBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -578,6 +579,7 @@ Partial Class Form1
         ' 
         ' CustomArea
         ' 
+        CustomArea.Controls.Add(Savebut)
         CustomArea.Controls.Add(Testbut)
         CustomArea.Controls.Add(TextBox1)
         CustomArea.Controls.Add(Label1)
@@ -591,7 +593,7 @@ Partial Class Form1
         ' 
         ' Testbut
         ' 
-        Testbut.Location = New Point(107, 534)
+        Testbut.Location = New Point(43, 534)
         Testbut.Name = "Testbut"
         Testbut.Size = New Size(108, 23)
         Testbut.TabIndex = 3
@@ -685,6 +687,15 @@ Partial Class Form1
         ButSelect.TabIndex = 0
         ButSelect.Text = "Button select"
         ' 
+        ' Savebut
+        ' 
+        Savebut.Location = New Point(157, 534)
+        Savebut.Name = "Savebut"
+        Savebut.Size = New Size(108, 23)
+        Savebut.TabIndex = 4
+        Savebut.Text = "Save Command"
+        Savebut.UseVisualStyleBackColor = True
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
@@ -777,5 +788,6 @@ Partial Class Form1
     Friend WithEvents Imageselect As OpenFileDialog
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents ButSelect As ComboBox
+    Friend WithEvents Savebut As Button
 
 End Class
