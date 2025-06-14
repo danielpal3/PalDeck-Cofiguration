@@ -72,18 +72,18 @@ Partial Class Form1
         But_1_Target = New ComboBox()
         But_1_mode = New ComboBox()
         CustomArea = New GroupBox()
+        Savebut = New Button()
         Testbut = New Button()
         TextBox1 = New TextBox()
         Label1 = New Label()
         CustomBut = New ComboBox()
         Configbut = New Button()
         Button9 = New Button()
-        Button10 = New Button()
-        Button11 = New Button()
+        AddScreenButton = New Button()
+        RemoveScreenButton = New Button()
         Imageselect = New OpenFileDialog()
         GroupBox1 = New GroupBox()
         ButSelect = New ComboBox()
-        Savebut = New Button()
         CType(Connectind, ComponentModel.ISupportInitialize).BeginInit()
         PreviewArea.SuspendLayout()
         CType(PreviewBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -123,6 +123,7 @@ Partial Class Form1
         NavArea.Size = New Size(146, 599)
         NavArea.TabIndex = 36
         NavArea.UseCompatibleStateImageBehavior = False
+        NavArea.View = View.List
         ' 
         ' PreviewArea
         ' 
@@ -591,6 +592,15 @@ Partial Class Form1
         CustomArea.TabStop = False
         CustomArea.Text = "Custom setup"
         ' 
+        ' Savebut
+        ' 
+        Savebut.Location = New Point(157, 534)
+        Savebut.Name = "Savebut"
+        Savebut.Size = New Size(108, 23)
+        Savebut.TabIndex = 4
+        Savebut.Text = "Save Command"
+        Savebut.UseVisualStyleBackColor = True
+        ' 
         ' Testbut
         ' 
         Testbut.Location = New Point(43, 534)
@@ -644,25 +654,25 @@ Partial Class Form1
         Button9.Text = "Upload"
         Button9.UseVisualStyleBackColor = True
         ' 
-        ' Button10
+        ' AddScreenButton
         ' 
-        Button10.Font = New Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        Button10.Location = New Point(12, 10)
-        Button10.Name = "Button10"
-        Button10.Size = New Size(23, 47)
-        Button10.TabIndex = 51
-        Button10.Text = "+"
-        Button10.UseVisualStyleBackColor = True
+        AddScreenButton.Font = New Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        AddScreenButton.Location = New Point(12, 10)
+        AddScreenButton.Name = "AddScreenButton"
+        AddScreenButton.Size = New Size(23, 47)
+        AddScreenButton.TabIndex = 51
+        AddScreenButton.Text = "+"
+        AddScreenButton.UseVisualStyleBackColor = True
         ' 
-        ' Button11
+        ' RemoveScreenButton
         ' 
-        Button11.Font = New Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        Button11.Location = New Point(41, 10)
-        Button11.Name = "Button11"
-        Button11.Size = New Size(25, 47)
-        Button11.TabIndex = 52
-        Button11.Text = "-"
-        Button11.UseVisualStyleBackColor = True
+        RemoveScreenButton.Font = New Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        RemoveScreenButton.Location = New Point(41, 10)
+        RemoveScreenButton.Name = "RemoveScreenButton"
+        RemoveScreenButton.Size = New Size(25, 47)
+        RemoveScreenButton.TabIndex = 52
+        RemoveScreenButton.Text = "-"
+        RemoveScreenButton.UseVisualStyleBackColor = True
         ' 
         ' Imageselect
         ' 
@@ -687,15 +697,6 @@ Partial Class Form1
         ButSelect.TabIndex = 0
         ButSelect.Text = "Button select"
         ' 
-        ' Savebut
-        ' 
-        Savebut.Location = New Point(157, 534)
-        Savebut.Name = "Savebut"
-        Savebut.Size = New Size(108, 23)
-        Savebut.TabIndex = 4
-        Savebut.Text = "Save Command"
-        Savebut.UseVisualStyleBackColor = True
-        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
@@ -703,8 +704,8 @@ Partial Class Form1
         ClientSize = New Size(1448, 671)
         ControlBox = False
         Controls.Add(GroupBox1)
-        Controls.Add(Button11)
-        Controls.Add(Button10)
+        Controls.Add(RemoveScreenButton)
+        Controls.Add(AddScreenButton)
         Controls.Add(Button9)
         Controls.Add(Configbut)
         Controls.Add(CustomArea)
@@ -783,8 +784,8 @@ Partial Class Form1
     Friend WithEvents Testbut As Button
     Friend WithEvents Configbut As Button
     Friend WithEvents Button9 As Button
-    Friend WithEvents Button10 As Button
-    Friend WithEvents Button11 As Button
+    Friend WithEvents AddScreenButton As Button
+    Friend WithEvents RemoveScreenButton As Button
     Friend WithEvents Imageselect As OpenFileDialog
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents ButSelect As ComboBox
