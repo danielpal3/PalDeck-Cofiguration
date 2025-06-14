@@ -31,6 +31,7 @@ Public Class Form1
     Public Class PaldeckScreen
         Public Property ScreenName As String
         Public Property Buttons As PaldeckButton() = New PaldeckButton(7) {}
+        Public Property BackgroundImagePath As String
     End Class
 
     Dim Screens As New List(Of PaldeckScreen)
@@ -271,6 +272,19 @@ Public Class Form1
         If CustomBut.Items.Count < 1 Then
             CustomBut.Text = "Button select"
         End If
+        ' Load preview image from saved path (if it exists)
+        If Not String.IsNullOrEmpty(screen.BackgroundImagePath) Then
+            Dim fullPath As String = IO.Path.Combine(Application.StartupPath, screen.BackgroundImagePath)
+            If File.Exists(fullPath) Then
+                Using fs As New FileStream(fullPath, FileMode.Open, FileAccess.Read)
+                    PreviewBox.Image = Image.FromStream(fs)
+                End Using
+            Else
+                PreviewBox.Image = Nothing
+            End If
+        Else
+            PreviewBox.Image = Nothing
+        End If
     End Sub
 
     Private Sub SaveScreens()
@@ -291,20 +305,21 @@ Public Class Form1
                 End If
                 If customCheck IsNot Nothing Then screen.Buttons(i).IsCustom = customCheck.Checked
             Next
-        End If
 
-        Dim path As String = "paldeck_screens.json"
-        File.WriteAllText(path, JsonConvert.SerializeObject(Screens, Formatting.Indented))
-        UpdateTargetCombosWithScreenNames()
+            Dim path As String = "paldeck_screens.json"
+            File.WriteAllText(path, JsonConvert.SerializeObject(Screens, Formatting.Indented))
+            UpdateTargetCombosWithScreenNames()
 
-        ' Save relative image path to screen object
-        If PreviewBox.Image IsNot Nothing Then
-            Dim imageFolder = path.Combine(Application.StartupPath, "Presets", "Images")
-            If Not Directory.Exists(imageFolder) Then Directory.CreateDirectory(imageFolder)
-            Dim destName = $"{Screen.ScreenName}_preview.png"
-            Dim destPath = path.Combine(imageFolder, destName)
-            PictureBox1.Image.Save(destPath, Imaging.ImageFormat.Png)
-            Screen.BackgroundImagePath = path.Combine("Presets", "Images", destName)
+            ' Save relative image path to screen object
+            If PreviewBox.Image IsNot Nothing Then
+                Dim imageFolder = System.IO.Path.Combine(Application.StartupPath, "Presets", "Images")
+                If Not Directory.Exists(imageFolder) Then Directory.CreateDirectory(imageFolder)
+                Dim destName = $"{screen.ScreenName}_preview.png"
+                Dim destPath = System.IO.Path.Combine(imageFolder, destName)
+                PreviewBox.Image.Save(destPath, Imaging.ImageFormat.Png)
+                screen.BackgroundImagePath = System.IO.Path.Combine("Presets", "Images", destName)
+            End If
+
         End If
 
     End Sub
@@ -595,9 +610,7 @@ Public Class Form1
     End Sub
 
     Private Sub SavePreset_Click(sender As Object, e As EventArgs) Handles SavePreset.Click
-        Dim presetImageFolder As String = Path.Combine(Application.StartupPath, "Presets\Images")
-        If Not Directory.Exists(presetImageFolder) Then
-            Directory.CreateDirectory(presetImageFolder)
-        End If
+
+
     End Sub
 End Class
