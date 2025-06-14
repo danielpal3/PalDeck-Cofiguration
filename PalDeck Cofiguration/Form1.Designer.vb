@@ -84,6 +84,8 @@ Partial Class Form1
         Imageselect = New OpenFileDialog()
         GroupBox1 = New GroupBox()
         ButSelect = New ComboBox()
+        PresetBox = New ComboBox()
+        SavePreset = New Button()
         CType(Connectind, ComponentModel.ISupportInitialize).BeginInit()
         PreviewArea.SuspendLayout()
         CType(PreviewBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -697,12 +699,32 @@ Partial Class Form1
         ButSelect.TabIndex = 0
         ButSelect.Text = "Button select"
         ' 
+        ' PresetBox
+        ' 
+        PresetBox.FormattingEnabled = True
+        PresetBox.Location = New Point(1270, 72)
+        PresetBox.Name = "PresetBox"
+        PresetBox.Size = New Size(170, 23)
+        PresetBox.TabIndex = 54
+        PresetBox.Text = "Load Preset"
+        ' 
+        ' SavePreset
+        ' 
+        SavePreset.Location = New Point(1365, 639)
+        SavePreset.Name = "SavePreset"
+        SavePreset.Size = New Size(75, 23)
+        SavePreset.TabIndex = 55
+        SavePreset.Text = "Save Preset"
+        SavePreset.UseVisualStyleBackColor = True
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1448, 671)
         ControlBox = False
+        Controls.Add(SavePreset)
+        Controls.Add(PresetBox)
         Controls.Add(GroupBox1)
         Controls.Add(RemoveScreenButton)
         Controls.Add(AddScreenButton)
@@ -790,5 +812,7 @@ Partial Class Form1
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents ButSelect As ComboBox
     Friend WithEvents Savebut As Button
+    Friend WithEvents PresetBox As ComboBox
+    Friend WithEvents SavePreset As Button
 
 End Class

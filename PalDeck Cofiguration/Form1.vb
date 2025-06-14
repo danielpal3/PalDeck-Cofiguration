@@ -8,12 +8,15 @@ Imports System.IO
 Imports System.Runtime.InteropServices
 Imports System.IO.Ports
 Imports Newtonsoft.Json
+Imports System.Windows.Shapes
 Public Class Form1
+
     Dim Client As New OBSWebsocket
     Dim ButtonFilePaths(7) As String
     Dim backgroundimagepath As String
     Dim ButtonLabels(7) As String
-    ' Define a structure to hold button data, including custom command
+    '
+    'Define a structure to hold button data, including custom command
     Public Class PaldeckButton
         Public Property Label As String
         Public Property FilePath As String
@@ -35,7 +38,7 @@ Public Class Form1
 
     ' Load project data
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        'Disable Warning combo boxes by default
         But_1_Target.Enabled = False
         But_2_Target.Enabled = False
         But_3_Target.Enabled = False
@@ -78,36 +81,42 @@ Public Class Form1
         But_7_Target.Tag = 6
         But_8_Target.Tag = 7
 
+        'Loop buttons by tag and trigger the load project function
         For i As Integer = 0 To 7
             ButtonData(i) = New PaldeckButton()
             LoadProject()
         Next
 
+        'Initialize the preview box
         PreviewBox.Image = New Bitmap(PreviewBox.Width, PreviewBox.Height)
 
+        'Set window properties
         Me.WindowState = 2
         Me.FormBorderStyle = 0
-        'test to see if settings have been configured for websocket (currently hard coded)
-        If My.Settings.ip = "" Or My.Settings.port = "" Or My.Settings.password = "" Then
-            'Open settings and get user to setup port access
-        End If
-        ConnectAsync()
-        'array of string for audio sources
 
-        'get scene names and populate combobox
-        For Each scene In Client.ListScenes
-            But_2_Target.Items.Add(scene.Name.ToString)
-        Next
+        'test to see if settings have been configured for websocket
+        If My.Settings.ip = "" Or My.Settings.port = "" Or My.Settings.password = "" Then
+
+            'Open settings and get user to setup port access
+
+        End If
+
+        ConnectAsync()
+
+        'Set the NavArea properties
         NavArea.View = View.List
         NavArea.FullRowSelect = True
         NavArea.HideSelection = False
         NavArea.MultiSelect = False
+        'Trigger the load screens function to load the screens from JSON
         LoadScreens()
+        'If no screens are loaded, add a default screen
         If Screens.Count = 0 Then
             AddNewScreen("Default")
         Else
             LoadScreen(0)
         End If
+        UpdateTargetCombosWithScreenNames()
     End Sub
 
     ' When ComboBox selection changes, load custom command
@@ -134,8 +143,7 @@ Public Class Form1
         NavArea.Items.RemoveAt(CurrentScreenIndex)
         LoadScreen(0)
     End Sub
-    ' Save project to JSON
-    ' Save project to JSON
+
     ' Save project to JSON
     Private Sub SaveProject()
         For i As Integer = 0 To 7
@@ -156,7 +164,6 @@ Public Class Form1
         Dim json As String = JsonConvert.SerializeObject(ButtonData, Formatting.Indented)
         File.WriteAllText("paldeck_project.json", json)
     End Sub
-
 
     ' Load project from JSON
     Private Sub LoadProject()
@@ -231,6 +238,7 @@ Public Class Form1
         Screens.Add(newScreen)
         NavArea.Items.Add(name)
         NavArea.Items(NavArea.Items.Count - 1).Selected = True
+
     End Sub
     Private Sub LoadScreen(index As Integer)
         If index < 0 OrElse index >= Screens.Count Then Exit Sub
@@ -287,6 +295,18 @@ Public Class Form1
 
         Dim path As String = "paldeck_screens.json"
         File.WriteAllText(path, JsonConvert.SerializeObject(Screens, Formatting.Indented))
+        UpdateTargetCombosWithScreenNames()
+
+        ' Save relative image path to screen object
+        If PreviewBox.Image IsNot Nothing Then
+            Dim imageFolder = path.Combine(Application.StartupPath, "Presets", "Images")
+            If Not Directory.Exists(imageFolder) Then Directory.CreateDirectory(imageFolder)
+            Dim destName = $"{Screen.ScreenName}_preview.png"
+            Dim destPath = path.Combine(imageFolder, destName)
+            PictureBox1.Image.Save(destPath, Imaging.ImageFormat.Png)
+            Screen.BackgroundImagePath = path.Combine("Presets", "Images", destName)
+        End If
+
     End Sub
 
     Private Sub LoadScreens()
@@ -298,6 +318,7 @@ Public Class Form1
         For Each screen In Screens
             NavArea.Items.Add(screen.ScreenName)
         Next
+        UpdateTargetCombosWithScreenNames()
     End Sub
 
     Private Sub NavArea_SelectedIndexChanged(sender As Object, e As EventArgs) Handles NavArea.SelectedIndexChanged
@@ -550,5 +571,33 @@ Public Class Form1
         SaveCurrentScreen()
         SaveScreens()
     End Sub
+    Private Sub UpdateTargetCombosWithScreenNames()
+        Dim currentScreenName As String = If(NavArea.SelectedItems.Count > 0, NavArea.SelectedItems(0).Text, "")
 
+        For i As Integer = 0 To 7
+            Dim cb = TryCast(Me.Controls.Find($"But_{i + 1}_Target", True).FirstOrDefault(), ComboBox)
+            If cb IsNot Nothing Then
+                cb.Items.Clear()
+
+                ' Add OBS scenes
+                For Each scene In Client.ListScenes
+                    cb.Items.Add(scene.Name.ToString)
+                Next
+
+                ' Add Paldeck screen names, excluding current
+                For Each screen In Screens
+                    If screen.ScreenName <> currentScreenName Then
+                        cb.Items.Add(screen.ScreenName)
+                    End If
+                Next
+            End If
+        Next
+    End Sub
+
+    Private Sub SavePreset_Click(sender As Object, e As EventArgs) Handles SavePreset.Click
+        Dim presetImageFolder As String = Path.Combine(Application.StartupPath, "Presets\Images")
+        If Not Directory.Exists(presetImageFolder) Then
+            Directory.CreateDirectory(presetImageFolder)
+        End If
+    End Sub
 End Class
