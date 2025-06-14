@@ -98,7 +98,16 @@ Public Class Form1
         For Each scene In Client.ListScenes
             But_2_Target.Items.Add(scene.Name.ToString)
         Next
-
+        NavArea.View = View.List
+        NavArea.FullRowSelect = True
+        NavArea.HideSelection = False
+        NavArea.MultiSelect = False
+        LoadScreens()
+        If Screens.Count = 0 Then
+            AddNewScreen("Default")
+        Else
+            LoadScreen(0)
+        End If
     End Sub
 
     ' When ComboBox selection changes, load custom command
@@ -115,6 +124,15 @@ Public Class Form1
         If selectedIndex >= 0 AndAlso selectedIndex < ButtonData.Length Then
             ButtonData(selectedIndex).CustomCommand = TextBox1.Text
         End If
+    End Sub
+    Private Sub RemoveCurrentScreen()
+        If Screens.Count <= 1 Then
+            MessageBox.Show("At least one screen must remain.")
+            Return
+        End If
+        Screens.RemoveAt(CurrentScreenIndex)
+        NavArea.Items.RemoveAt(CurrentScreenIndex)
+        LoadScreen(0)
     End Sub
     ' Save project to JSON
     ' Save project to JSON
@@ -214,17 +232,6 @@ Public Class Form1
         NavArea.Items.Add(name)
         NavArea.Items(NavArea.Items.Count - 1).Selected = True
     End Sub
-
-
-    Private Sub RemoveCurrentScreen()
-        If Screens.Count <= 1 Then
-            MessageBox.Show("At least one screen must remain.")
-            Return
-        End If
-        Screens.RemoveAt(CurrentScreenIndex)
-        NavArea.Items.RemoveAt(CurrentScreenIndex)
-        LoadScreen(0)
-    End Sub
     Private Sub LoadScreen(index As Integer)
         If index < 0 OrElse index >= Screens.Count Then Exit Sub
         CurrentScreenIndex = index
@@ -233,20 +240,51 @@ Public Class Form1
             Dim modeBox = CType(Me.Controls.Find($"But_{i + 1}_mode", True).FirstOrDefault(), ComboBox)
             Dim targetBox = Me.Controls.Find($"But_{i + 1}_Target", True).FirstOrDefault()
             Dim customCheck = CType(Me.Controls.Find($"Custom{i + 1}", True).FirstOrDefault(), CheckBox)
+            Dim filePath = screen.Buttons(i).FilePath
+            Dim label = screen.Buttons(i).Label
 
-            If modeBox IsNot Nothing Then modeBox.SelectedIndex = screen.Buttons(i).ModeIndex
+            If modeBox IsNot Nothing Then
+                If screen.Buttons(i).ModeIndex >= 0 AndAlso screen.Buttons(i).ModeIndex < modeBox.Items.Count Then
+                    modeBox.SelectedIndex = screen.Buttons(i).ModeIndex
+                End If
+            End If
+
             If targetBox IsNot Nothing Then
                 If TypeOf targetBox Is ComboBox Then
-                    CType(targetBox, ComboBox).Text = screen.Buttons(i).TargetValue
+                    Dim cb = CType(targetBox, ComboBox)
+                    cb.Text = If(String.IsNullOrWhiteSpace(screen.Buttons(i).TargetValue), "Button select", screen.Buttons(i).TargetValue)
                 ElseIf TypeOf targetBox Is TextBox Then
                     CType(targetBox, TextBox).Text = screen.Buttons(i).TargetValue
                 End If
             End If
+
             If customCheck IsNot Nothing Then customCheck.Checked = screen.Buttons(i).IsCustom
         Next
+        If CustomBut.Items.Count < 1 Then
+            CustomBut.Text = "Button select"
+        End If
     End Sub
 
     Private Sub SaveScreens()
+        If CurrentScreenIndex >= 0 AndAlso CurrentScreenIndex < Screens.Count Then
+            Dim screen = Screens(CurrentScreenIndex)
+            For i As Integer = 0 To 7
+                Dim modeBox = CType(Me.Controls.Find($"But_{i + 1}_mode", True).FirstOrDefault(), ComboBox)
+                Dim targetBox = Me.Controls.Find($"But_{i + 1}_Target", True).FirstOrDefault()
+                Dim customCheck = CType(Me.Controls.Find($"Custom{i + 1}", True).FirstOrDefault(), CheckBox)
+
+                If modeBox IsNot Nothing Then screen.Buttons(i).ModeIndex = modeBox.SelectedIndex
+                If targetBox IsNot Nothing Then
+                    If TypeOf targetBox Is ComboBox Then
+                        screen.Buttons(i).TargetValue = CType(targetBox, ComboBox).Text
+                    ElseIf TypeOf targetBox Is TextBox Then
+                        screen.Buttons(i).TargetValue = CType(targetBox, TextBox).Text
+                    End If
+                End If
+                If customCheck IsNot Nothing Then screen.Buttons(i).IsCustom = customCheck.Checked
+            Next
+        End If
+
         Dim path As String = "paldeck_screens.json"
         File.WriteAllText(path, JsonConvert.SerializeObject(Screens, Formatting.Indented))
     End Sub
@@ -265,6 +303,7 @@ Public Class Form1
     Private Sub NavArea_SelectedIndexChanged(sender As Object, e As EventArgs) Handles NavArea.SelectedIndexChanged
         If NavArea.SelectedItems.Count > 0 Then
             Dim selectedIndex As Integer = NavArea.Items.IndexOf(NavArea.SelectedItems(0))
+            SaveScreens()
             LoadScreen(selectedIndex)
         End If
     End Sub
@@ -280,6 +319,31 @@ Public Class Form1
     Private Sub RemoveScreenButton_Click(sender As Object, e As EventArgs) Handles RemoveScreenButton.Click
         RemoveCurrentScreen()
         SaveScreens()
+    End Sub
+
+
+    Private Sub SaveCurrentScreen()
+        If CurrentScreenIndex < 0 OrElse CurrentScreenIndex >= Screens.Count Then Exit Sub
+
+        Dim screen = Screens(CurrentScreenIndex)
+
+        For i As Integer = 0 To 7
+            Dim modeBox = CType(Me.Controls.Find($"But_{i + 1}_mode", True).FirstOrDefault(), ComboBox)
+            Dim targetBox = Me.Controls.Find($"But_{i + 1}_Target", True).FirstOrDefault()
+            Dim customCheck = CType(Me.Controls.Find($"Custom{i + 1}", True).FirstOrDefault(), CheckBox)
+
+            If modeBox IsNot Nothing Then screen.Buttons(i).ModeIndex = modeBox.SelectedIndex
+
+            If targetBox IsNot Nothing Then
+                If TypeOf targetBox Is ComboBox Then
+                    screen.Buttons(i).TargetValue = CType(targetBox, ComboBox).Text
+                ElseIf TypeOf targetBox Is TextBox Then
+                    screen.Buttons(i).TargetValue = CType(targetBox, TextBox).Text
+                End If
+            End If
+
+            If customCheck IsNot Nothing Then screen.Buttons(i).IsCustom = customCheck.Checked
+        Next
     End Sub
 
     Private Sub CustomCheck_CheckedChanged(sender As Object, e As EventArgs) _
@@ -482,4 +546,9 @@ Public Class Form1
     Private Sub Savebut_Click(sender As Object, e As EventArgs) Handles Savebut.Click
         SaveProject()
     End Sub
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        SaveCurrentScreen()
+        SaveScreens()
+    End Sub
+
 End Class
