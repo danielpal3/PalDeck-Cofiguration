@@ -81,7 +81,8 @@ Public Class Form1
         But_6_Target.Tag = 5
         But_7_Target.Tag = 6
         But_8_Target.Tag = 7
-
+        ButSelect.Items.Add("Button select")
+        CustomBut.Items.Add("Button select")
         'Loop buttons by tag and trigger the load project function
         For i As Integer = 0 To 7
             ButtonData(i) = New PaldeckButton()
@@ -118,6 +119,8 @@ Public Class Form1
             LoadScreen(0)
         End If
         UpdateTargetCombosWithScreenNames()
+        PopulateButtonTargets()
+
     End Sub
 
     ' When ComboBox selection changes, load custom command
@@ -125,6 +128,17 @@ Public Class Form1
         Dim selectedIndex As Integer = CustomBut.SelectedIndex
         If selectedIndex >= 0 AndAlso selectedIndex < ButtonData.Length Then
             TextBox1.Text = ButtonData(selectedIndex).CustomCommand
+        End If
+        If CustomBut.Text = "Button select" Then
+            Label1.Visible = False
+            TextBox1.Visible = False
+            Testbut.Visible = False
+            Savebut.Visible = False
+        Else
+            Label1.Visible = True
+            TextBox1.Visible = True
+            Testbut.Visible = True
+            Savebut.Visible = True
         End If
     End Sub
 
@@ -193,19 +207,6 @@ Public Class Form1
             End If
         Next
 
-        ' Rebuild ComboBox with any valid entries
-        CustomBut.Items.Clear()
-        For i As Integer = 0 To 7
-            If Not String.IsNullOrEmpty(ButtonData(i).Label) OrElse Not String.IsNullOrEmpty(ButtonData(i).CustomCommand) Then
-                CustomBut.Items.Add("Button " & (i + 1))
-            End If
-        Next
-
-        ' Select first valid item if available
-        If CustomBut.Items.Count > 0 Then
-            CustomBut.SelectedIndex = 0
-        End If
-
         ' Apply saved UI states
         For i As Integer = 0 To 7
             modeBox = CType(Me.Controls.Find($"But_{i + 1}_mode", True).FirstOrDefault(), ComboBox)
@@ -222,6 +223,7 @@ Public Class Form1
             End If
             If customCheck IsNot Nothing Then customCheck.Checked = ButtonData(i).IsCustom
         Next
+        PopulateButtonTargets()
 
     End Sub
     Private Sub AddNewScreen(name As String)
@@ -403,16 +405,26 @@ Public Class Form1
     End Sub
     Private Sub UpdateCustomComboBox()
         CustomBut.Items.Clear()
-
+        CustomBut.Items.Add("Button select")
         For i As Integer = 0 To 7
-            Dim checkbox As CheckBox = Controls.Find("Custom" & i, True).FirstOrDefault()
-            If checkbox IsNot Nothing AndAlso checkbox.Checked Then
-                Dim button As Button = Controls.Find("Button" & (i + 1).ToString(), True).FirstOrDefault()
-                If button IsNot Nothing Then
-                    CustomBut.Items.Add(button.Text)
+            Dim modeBox = CType(Me.Controls.Find($"Custom{i + 1}", True).FirstOrDefault(), ComboBox)
+            Dim selectedIndex = modeBox.SelectedIndex
+            Dim selectedAction As String = modeBox.Text.ToLower()
+            If modeBox IsNot Nothing Then
+
+                Dim btn = CType(Me.Controls.Find($"Button{i + 1}", True).FirstOrDefault(), Button)
+                If btn IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(btn.Text) Then
+                    CustomBut.Items.Add(btn.Text)
+                    If selectedAction = "toggle with error" Then
+                    End If
                 End If
             End If
+
         Next
+        If CustomBut.Items.Count > 0 Then
+            CustomBut.SelectedIndex = 0 ' This selects "Button select"
+        End If
+
     End Sub
     Private Function ConnectAsync() As Await
         Dim count As Integer
@@ -528,6 +540,7 @@ Public Class Form1
     End Sub
     Private Sub PopulateCustomComboBox()
         CustomBut.Items.Clear()
+        CustomBut.Items.Add("Button select")
 
         For i As Integer = 0 To 7
             Dim checkBoxName = "Custom" & (i + 1)
@@ -538,9 +551,11 @@ Public Class Form1
 
             If cb IsNot Nothing AndAlso btn IsNot Nothing AndAlso cb.Checked Then
                 CustomBut.Items.Add(btn.Text)
-
             End If
         Next
+
+        ' Always default to "Button select"
+        CustomBut.SelectedIndex = 0
     End Sub
 
     Private Sub But_Mode_Changed(sender As Object, e As EventArgs) _
@@ -577,6 +592,8 @@ Public Class Form1
         If customCheck IsNot Nothing Then
             customCheck.Enabled = Not (selectedAction = "New screen")
         End If
+
+        PopulateButtonTargets()
     End Sub
 
     Private Sub Savebut_Click(sender As Object, e As EventArgs) Handles Savebut.Click
@@ -608,9 +625,77 @@ Public Class Form1
             End If
         Next
     End Sub
+    Private Sub PopulateButtonTargets()
 
-    Private Sub SavePreset_Click(sender As Object, e As EventArgs) Handles SavePreset.Click
+        ButSelect.Items.Clear()
+        ButSelect.Items.Add("Button select")
+        For i As Integer = 0 To 7
+            Dim modeBox = CType(Me.Controls.Find($"But_{i + 1}_mode", True).FirstOrDefault(), ComboBox)
+            Dim selectedIndex = modeBox.SelectedIndex
+            Dim selectedAction As String = modeBox.Text.ToLower()
+            If modeBox IsNot Nothing Then
 
+                If selectedAction = "toggle" OrElse selectedAction = "toggle with error" Then
+                    ''     For j As Integer = 0 To 7
+                    ''   If j <> i Then
+                    Dim btn = CType(Me.Controls.Find($"Button{i + 1}", True).FirstOrDefault(), Button)
+                    If btn IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(btn.Text) Then
+                        ButSelect.Items.Add(btn.Text)
+                        If selectedAction = "toggle with error" Then
+                            errorbut.Enabled = False
+                        Else
+                            errorbut.Enabled = True
+                        End If
+                    End If
+                End If
+            End If
+        Next
+        ButSelect.SelectedIndex = 0
+    End Sub
+    Private Sub UpdateErrorUIVisibility()
+        Dim selectedIndex As Integer = ButSelect.SelectedIndex
+        If selectedIndex < 0 Then Exit Sub
 
+        Dim modeBox = CType(Me.Controls.Find($"But_{selectedIndex + 1}_mode", True).FirstOrDefault(), ComboBox)
+        If modeBox Is Nothing Then Exit Sub
+
+        Dim isErrorToggle = modeBox.Text.ToLower().Contains("toggle with error")
+
+        errorbut.Enabled = isErrorToggle
+        timeset.Enabled = isErrorToggle
+        Label2.Enabled = isErrorToggle
+        Label3.Enabled = isErrorToggle
+    End Sub
+
+    Private Sub ButSelect_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ButSelect.SelectedIndexChanged
+
+        Dim selectedIndex As Integer = ButSelect.SelectedIndex
+        If selectedIndex < 0 Then
+            clickedbut.Visible = False
+            errorbut.Visible = False
+            Label2.Visible = False
+            Label3.Visible = False
+            timeset.Visible = False
+            Exit Sub
+        End If
+
+        Dim selectedText As String = ButSelect.SelectedItem.ToString()
+
+        ' Show/hide UI based on "Button select" entry
+        If selectedText.ToLower().Contains("button select") Then
+            clickedbut.Visible = False
+            errorbut.Visible = False
+            Label2.Visible = False
+            Label3.Visible = False
+            timeset.Visible = False
+        Else
+            clickedbut.Visible = True
+            errorbut.Visible = True
+            Label2.Visible = True
+            Label3.Visible = True
+            timeset.Visible = True
+        End If
+        ' Enable/disable error panel based on toggle type
+        UpdateErrorUIVisibility()
     End Sub
 End Class

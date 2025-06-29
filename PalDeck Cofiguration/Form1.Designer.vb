@@ -83,6 +83,11 @@ Partial Class Form1
         RemoveScreenButton = New Button()
         Imageselect = New OpenFileDialog()
         GroupBox1 = New GroupBox()
+        Label3 = New Label()
+        timeset = New TextBox()
+        Label2 = New Label()
+        errorbut = New Button()
+        clickedbut = New Button()
         ButSelect = New ComboBox()
         PresetBox = New ComboBox()
         SavePreset = New Button()
@@ -682,6 +687,11 @@ Partial Class Form1
         ' 
         ' GroupBox1
         ' 
+        GroupBox1.Controls.Add(Label3)
+        GroupBox1.Controls.Add(timeset)
+        GroupBox1.Controls.Add(Label2)
+        GroupBox1.Controls.Add(errorbut)
+        GroupBox1.Controls.Add(clickedbut)
         GroupBox1.Controls.Add(ButSelect)
         GroupBox1.Location = New Point(989, 12)
         GroupBox1.Name = "GroupBox1"
@@ -689,6 +699,49 @@ Partial Class Form1
         GroupBox1.TabIndex = 53
         GroupBox1.TabStop = False
         GroupBox1.Text = "State setup"
+        ' 
+        ' Label3
+        ' 
+        Label3.AutoSize = True
+        Label3.Location = New Point(133, 89)
+        Label3.Name = "Label3"
+        Label3.Size = New Size(50, 15)
+        Label3.TabIndex = 5
+        Label3.Text = "seconds"
+        ' 
+        ' timeset
+        ' 
+        timeset.Location = New Point(92, 86)
+        timeset.Name = "timeset"
+        timeset.Size = New Size(35, 23)
+        timeset.TabIndex = 4
+        ' 
+        ' Label2
+        ' 
+        Label2.AutoSize = True
+        Label2.Location = New Point(6, 89)
+        Label2.Name = "Label2"
+        Label2.Size = New Size(80, 15)
+        Label2.TabIndex = 3
+        Label2.Text = "Error timeout:"
+        ' 
+        ' errorbut
+        ' 
+        errorbut.Location = New Point(100, 47)
+        errorbut.Name = "errorbut"
+        errorbut.Size = New Size(88, 23)
+        errorbut.TabIndex = 2
+        errorbut.Text = "Error state"
+        errorbut.UseVisualStyleBackColor = True
+        ' 
+        ' clickedbut
+        ' 
+        clickedbut.Location = New Point(6, 47)
+        clickedbut.Name = "clickedbut"
+        clickedbut.Size = New Size(88, 23)
+        clickedbut.TabIndex = 1
+        clickedbut.Text = "Clicked state"
+        clickedbut.UseVisualStyleBackColor = True
         ' 
         ' ButSelect
         ' 
@@ -749,6 +802,7 @@ Partial Class Form1
         CustomArea.ResumeLayout(False)
         CustomArea.PerformLayout()
         GroupBox1.ResumeLayout(False)
+        GroupBox1.PerformLayout()
         ResumeLayout(False)
     End Sub
     Friend WithEvents Connectind As PictureBox
@@ -814,5 +868,10 @@ Partial Class Form1
     Friend WithEvents Savebut As Button
     Friend WithEvents PresetBox As ComboBox
     Friend WithEvents SavePreset As Button
+    Friend WithEvents Label3 As Label
+    Friend WithEvents timeset As TextBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents errorbut As Button
+    Friend WithEvents clickedbut As Button
 
 End Class
