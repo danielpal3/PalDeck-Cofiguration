@@ -23,18 +23,16 @@ Public Class Form1
         Public Property ModeIndex As Integer
         Public Property TargetValue As String
         Public Property IsCustom As Boolean
-        Public Property ClickedImage As String ' base64 string
-        Public Property ErrorImage As String   ' base64 string
+        Public Property ClickImagePath As String ' base64 string
+        Public Property ErrorImagePath As String   ' base64 string
     End Class
-
-    ' Create an array to hold data for each button
-    Dim ButtonData(7) As PaldeckButton
     Public Class PaldeckScreen
         Public Property ScreenName As String
         Public Property Buttons As PaldeckButton() = New PaldeckButton(7) {}
         Public Property BackgroundImagePath As String
     End Class
-
+    ' Create an array to hold data for each button
+    Dim ButtonData(7) As PaldeckButton
     Dim Screens As New List(Of PaldeckScreen)
     Dim CurrentScreenIndex As Integer = -1
 
@@ -182,24 +180,17 @@ Public Class Form1
             If cmdBox IsNot Nothing Then ButtonData(i).CustomCommand = cmdBox.Text
 
             ' Save clicked image preview
-            Dim clickedPreview = CType(Me.Controls.Find("ClickPreviewBox", True).FirstOrDefault(), PictureBox)
-            If clickedPreview IsNot Nothing AndAlso clickedPreview.Image IsNot Nothing Then
-                Using ms As New MemoryStream()
-                    clickedPreview.Image.Save(ms, ImageFormat.Png)
-                    ButtonData(i).ClickedImage = Convert.ToBase64String(ms.ToArray())
-                End Using
-            End If
+            ' New logic for click and error image paths
+            Dim clickPreview = CType(Me.Controls.Find($"ClickPreview{i + 1}", True).FirstOrDefault(), PictureBox)
+            Dim errorPreview = CType(Me.Controls.Find($"ErrorPreview{i + 1}", True).FirstOrDefault(), PictureBox)
 
-            ' Save error image preview
-            Dim errorPreview = CType(Me.Controls.Find("ErrorPreviewBox", True).FirstOrDefault(), PictureBox)
-            If errorPreview IsNot Nothing AndAlso errorPreview.Image IsNot Nothing Then
-                Using ms As New MemoryStream()
-                    errorPreview.Image.Save(ms, ImageFormat.Png)
-                    ButtonData(i).ErrorImage = Convert.ToBase64String(ms.ToArray())
-                End Using
+            If clickPreview IsNot Nothing AndAlso clickPreview.Tag IsNot Nothing Then
+                ButtonData(i).ClickImagePath = clickPreview.Tag.ToString()
+            End If
+            If errorPreview IsNot Nothing AndAlso errorPreview.Tag IsNot Nothing Then
+                ButtonData(i).ErrorImagePath = errorPreview.Tag.ToString()
             End If
         Next
-
         Dim json As String = JsonConvert.SerializeObject(ButtonData, Formatting.Indented)
         File.WriteAllText("paldeck_project.json", json)
     End Sub
@@ -245,9 +236,13 @@ Public Class Form1
                 End If
             End If
             If customCheck IsNot Nothing Then customCheck.Checked = ButtonData(i).IsCustom
-        Next
-        PopulateButtonTargets()
 
+            ButtonPreviewBox.ImageLocation = ButtonData(i).ClickImagePath
+            ButtonPreviewBox.ImageLocation = ButtonData(i).ClickImagePath
+            ButtonPreviewBox.ImageLocation = ButtonData(i).ErrorImagePath
+            ButtonPreviewBox.ImageLocation = ButtonData(i).ErrorImagePath
+            PopulateButtonTargets()
+        Next
     End Sub
     Private Sub AddNewScreen(name As String)
         Dim newScreen As New PaldeckScreen With {.ScreenName = name}
