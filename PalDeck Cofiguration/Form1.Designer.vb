@@ -72,14 +72,15 @@ Partial Class Form1
         But_1_Target = New ComboBox()
         But_1_mode = New ComboBox()
         CustomArea = New GroupBox()
-        GroupBox2 = New GroupBox()
-        ButtonPreviewBox = New PictureBox()
-        Appearance = New Button()
         Savebut = New Button()
         Testbut = New Button()
         TextBox1 = New TextBox()
         Label1 = New Label()
         CustomBut = New ComboBox()
+        GroupBox2 = New GroupBox()
+        ButtonVES = New Button()
+        ButtonVCS = New Button()
+        ButtonPreviewBox = New PictureBox()
         Configbut = New Button()
         Button9 = New Button()
         AddScreenButton = New Button()
@@ -592,8 +593,6 @@ Partial Class Form1
         ' 
         ' CustomArea
         ' 
-        CustomArea.Controls.Add(GroupBox2)
-        CustomArea.Controls.Add(Appearance)
         CustomArea.Controls.Add(Savebut)
         CustomArea.Controls.Add(Testbut)
         CustomArea.Controls.Add(TextBox1)
@@ -601,41 +600,14 @@ Partial Class Form1
         CustomArea.Controls.Add(CustomBut)
         CustomArea.Location = New Point(670, 12)
         CustomArea.Name = "CustomArea"
-        CustomArea.Size = New Size(313, 563)
+        CustomArea.Size = New Size(313, 237)
         CustomArea.TabIndex = 48
         CustomArea.TabStop = False
         CustomArea.Text = "Custom setup"
         ' 
-        ' GroupBox2
-        ' 
-        GroupBox2.Controls.Add(ButtonPreviewBox)
-        GroupBox2.Location = New Point(6, 227)
-        GroupBox2.Name = "GroupBox2"
-        GroupBox2.Size = New Size(301, 139)
-        GroupBox2.TabIndex = 7
-        GroupBox2.TabStop = False
-        GroupBox2.Text = "Click preview"
-        ' 
-        ' ButtonPreviewBox
-        ' 
-        ButtonPreviewBox.Location = New Point(30, 22)
-        ButtonPreviewBox.Name = "ButtonPreviewBox"
-        ButtonPreviewBox.Size = New Size(184, 111)
-        ButtonPreviewBox.TabIndex = 6
-        ButtonPreviewBox.TabStop = False
-        ' 
-        ' Appearance
-        ' 
-        Appearance.Location = New Point(71, 198)
-        Appearance.Name = "Appearance"
-        Appearance.Size = New Size(164, 23)
-        Appearance.TabIndex = 5
-        Appearance.Text = "Appearance when clicked"
-        Appearance.UseVisualStyleBackColor = True
-        ' 
         ' Savebut
         ' 
-        Savebut.Location = New Point(157, 534)
+        Savebut.Location = New Point(157, 198)
         Savebut.Name = "Savebut"
         Savebut.Size = New Size(108, 23)
         Savebut.TabIndex = 4
@@ -644,7 +616,7 @@ Partial Class Form1
         ' 
         ' Testbut
         ' 
-        Testbut.Location = New Point(43, 534)
+        Testbut.Location = New Point(43, 198)
         Testbut.Name = "Testbut"
         Testbut.Size = New Size(108, 23)
         Testbut.TabIndex = 3
@@ -676,6 +648,45 @@ Partial Class Form1
         CustomBut.Size = New Size(121, 23)
         CustomBut.TabIndex = 0
         CustomBut.Text = "Button select"
+        ' 
+        ' GroupBox2
+        ' 
+        GroupBox2.Controls.Add(ButtonVES)
+        GroupBox2.Controls.Add(ButtonVCS)
+        GroupBox2.Controls.Add(ButtonPreviewBox)
+        GroupBox2.Location = New Point(6, 115)
+        GroupBox2.Name = "GroupBox2"
+        GroupBox2.Size = New Size(263, 145)
+        GroupBox2.TabIndex = 7
+        GroupBox2.TabStop = False
+        GroupBox2.Text = "Click preview"
+        ' 
+        ' ButtonVES
+        ' 
+        ButtonVES.Location = New Point(127, 22)
+        ButtonVES.Name = "ButtonVES"
+        ButtonVES.Size = New Size(98, 23)
+        ButtonVES.TabIndex = 8
+        ButtonVES.Text = "View error state"
+        ButtonVES.UseVisualStyleBackColor = True
+        ' 
+        ' ButtonVCS
+        ' 
+        ButtonVCS.Location = New Point(8, 22)
+        ButtonVCS.Name = "ButtonVCS"
+        ButtonVCS.Size = New Size(113, 23)
+        ButtonVCS.TabIndex = 7
+        ButtonVCS.Text = "View clicked state"
+        ButtonVCS.UseVisualStyleBackColor = True
+        ' 
+        ' ButtonPreviewBox
+        ' 
+        ButtonPreviewBox.BackColor = SystemColors.ActiveBorder
+        ButtonPreviewBox.Location = New Point(86, 48)
+        ButtonPreviewBox.Name = "ButtonPreviewBox"
+        ButtonPreviewBox.Size = New Size(106, 83)
+        ButtonPreviewBox.TabIndex = 6
+        ButtonPreviewBox.TabStop = False
         ' 
         ' Configbut
         ' 
@@ -721,6 +732,7 @@ Partial Class Form1
         ' 
         ' GroupBox1
         ' 
+        GroupBox1.Controls.Add(GroupBox2)
         GroupBox1.Controls.Add(Label3)
         GroupBox1.Controls.Add(timeset)
         GroupBox1.Controls.Add(Label2)
@@ -911,6 +923,7 @@ Partial Class Form1
     Friend WithEvents clickedbut As Button
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents ButtonPreviewBox As PictureBox
-    Friend WithEvents Appearance As Button
+    Friend WithEvents ButtonVES As Button
+    Friend WithEvents ButtonVCS As Button
 
 End Class

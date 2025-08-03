@@ -10,7 +10,6 @@ Imports System.IO.Ports
 Imports Newtonsoft.Json
 Imports System.Windows.Shapes
 Public Class Form1
-
     Dim Client As New OBSWebsocket
     Dim ButtonFilePaths(7) As String
     Dim backgroundimagepath As String
@@ -24,6 +23,8 @@ Public Class Form1
         Public Property ModeIndex As Integer
         Public Property TargetValue As String
         Public Property IsCustom As Boolean
+        Public Property ClickedImage As String ' base64 string
+        Public Property ErrorImage As String   ' base64 string
     End Class
 
     ' Create an array to hold data for each button
@@ -166,6 +167,7 @@ Public Class Form1
                 ButtonData(i) = New PaldeckButton()
             End If
         Next
+
         For i As Integer = 0 To 7
             Dim modeBox = CType(Me.Controls.Find($"But_{i + 1}_mode", True).FirstOrDefault(), ComboBox)
             Dim targetBox = Me.Controls.Find($"But_{i + 1}_Target", True).FirstOrDefault()
@@ -174,12 +176,33 @@ Public Class Form1
             If modeBox IsNot Nothing Then ButtonData(i).ModeIndex = modeBox.SelectedIndex
             If targetBox IsNot Nothing Then ButtonData(i).TargetValue = If(TypeOf targetBox Is ComboBox, CType(targetBox, ComboBox).Text, CType(targetBox, TextBox).Text)
             If customCheck IsNot Nothing Then ButtonData(i).IsCustom = customCheck.Checked
+
+            ' Retrieve command input
+            Dim cmdBox = CType(Me.Controls.Find("CommandBox", True).FirstOrDefault(), TextBox)
+            If cmdBox IsNot Nothing Then ButtonData(i).CustomCommand = cmdBox.Text
+
+            ' Save clicked image preview
+            Dim clickedPreview = CType(Me.Controls.Find("ClickPreviewBox", True).FirstOrDefault(), PictureBox)
+            If clickedPreview IsNot Nothing AndAlso clickedPreview.Image IsNot Nothing Then
+                Using ms As New MemoryStream()
+                    clickedPreview.Image.Save(ms, ImageFormat.Png)
+                    ButtonData(i).ClickedImage = Convert.ToBase64String(ms.ToArray())
+                End Using
+            End If
+
+            ' Save error image preview
+            Dim errorPreview = CType(Me.Controls.Find("ErrorPreviewBox", True).FirstOrDefault(), PictureBox)
+            If errorPreview IsNot Nothing AndAlso errorPreview.Image IsNot Nothing Then
+                Using ms As New MemoryStream()
+                    errorPreview.Image.Save(ms, ImageFormat.Png)
+                    ButtonData(i).ErrorImage = Convert.ToBase64String(ms.ToArray())
+                End Using
+            End If
         Next
 
         Dim json As String = JsonConvert.SerializeObject(ButtonData, Formatting.Indented)
         File.WriteAllText("paldeck_project.json", json)
     End Sub
-
     ' Load project from JSON
     Private Sub LoadProject()
         Dim modeBox As ComboBox
@@ -698,30 +721,23 @@ Public Class Form1
         ' Enable/disable error panel based on toggle type
         UpdateErrorUIVisibility()
 
-        Dim selectedButtonName As String = ButSelect.Text
-        If selectedButtonName <> "Button select" Then
-            ' Assuming your images are named like: button1.jpg, button2.jpg etc.
-            Dim imagePath As String = IO.Path.Combine(Application.StartupPath, "buttonImages", selectedButtonName.ToLower() & "_default.jpg")
+    End Sub
+    Private Sub clickedbut_Click(sender As Object, e As EventArgs) Handles clickedbut.Click
+        Using ofd As New OpenFileDialog
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
+            If ofd.ShowDialog = DialogResult.OK Then
+                ButtonPreviewBox.Image = Image.FromFile(ofd.FileName)
 
-            If File.Exists(imagePath) Then
-                ButtonPreviewBox.Image = Image.FromFile(imagePath)
-            Else
-                ButtonPreviewBox.Image = Nothing ' or a fallback image
             End If
-
-            ButtonPreviewBox.Visible = True
-        Else
-            ButtonPreviewBox.Visible = False
-            ButtonPreviewBox.Image = Nothing
-        End If
+        End Using
     End Sub
 
-    Private Sub Appearance_Click(sender As Object, e As EventArgs) Handles Appearance.Click
-        Using ofd As New OpenFileDialog()
+    Private Sub errorbut_Click(sender As Object, e As EventArgs) Handles errorbut.Click
+        Using ofd As New OpenFileDialog
             ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
-            If ofd.ShowDialog() = DialogResult.OK Then
+            If ofd.ShowDialog = DialogResult.OK Then
                 ButtonPreviewBox.Image = Image.FromFile(ofd.FileName)
-                UpdatePreview()
+
             End If
         End Using
     End Sub
