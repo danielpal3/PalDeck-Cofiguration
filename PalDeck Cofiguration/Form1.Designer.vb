@@ -72,6 +72,9 @@ Partial Class Form1
         But_1_Target = New ComboBox()
         But_1_mode = New ComboBox()
         CustomArea = New GroupBox()
+        GroupBox2 = New GroupBox()
+        ButtonPreviewBox = New PictureBox()
+        Appearance = New Button()
         Savebut = New Button()
         Testbut = New Button()
         TextBox1 = New TextBox()
@@ -96,6 +99,8 @@ Partial Class Form1
         CType(PreviewBox, ComponentModel.ISupportInitialize).BeginInit()
         ScreenSetupGroup.SuspendLayout()
         CustomArea.SuspendLayout()
+        GroupBox2.SuspendLayout()
+        CType(ButtonPreviewBox, ComponentModel.ISupportInitialize).BeginInit()
         GroupBox1.SuspendLayout()
         SuspendLayout()
         ' 
@@ -587,6 +592,8 @@ Partial Class Form1
         ' 
         ' CustomArea
         ' 
+        CustomArea.Controls.Add(GroupBox2)
+        CustomArea.Controls.Add(Appearance)
         CustomArea.Controls.Add(Savebut)
         CustomArea.Controls.Add(Testbut)
         CustomArea.Controls.Add(TextBox1)
@@ -598,6 +605,33 @@ Partial Class Form1
         CustomArea.TabIndex = 48
         CustomArea.TabStop = False
         CustomArea.Text = "Custom setup"
+        ' 
+        ' GroupBox2
+        ' 
+        GroupBox2.Controls.Add(ButtonPreviewBox)
+        GroupBox2.Location = New Point(6, 227)
+        GroupBox2.Name = "GroupBox2"
+        GroupBox2.Size = New Size(301, 139)
+        GroupBox2.TabIndex = 7
+        GroupBox2.TabStop = False
+        GroupBox2.Text = "Click preview"
+        ' 
+        ' ButtonPreviewBox
+        ' 
+        ButtonPreviewBox.Location = New Point(30, 22)
+        ButtonPreviewBox.Name = "ButtonPreviewBox"
+        ButtonPreviewBox.Size = New Size(184, 111)
+        ButtonPreviewBox.TabIndex = 6
+        ButtonPreviewBox.TabStop = False
+        ' 
+        ' Appearance
+        ' 
+        Appearance.Location = New Point(71, 198)
+        Appearance.Name = "Appearance"
+        Appearance.Size = New Size(164, 23)
+        Appearance.TabIndex = 5
+        Appearance.Text = "Appearance when clicked"
+        Appearance.UseVisualStyleBackColor = True
         ' 
         ' Savebut
         ' 
@@ -622,7 +656,7 @@ Partial Class Form1
         TextBox1.Location = New Point(6, 78)
         TextBox1.Multiline = True
         TextBox1.Name = "TextBox1"
-        TextBox1.Size = New Size(301, 450)
+        TextBox1.Size = New Size(301, 111)
         TextBox1.TabIndex = 2
         ' 
         ' Label1
@@ -801,6 +835,8 @@ Partial Class Form1
         ScreenSetupGroup.PerformLayout()
         CustomArea.ResumeLayout(False)
         CustomArea.PerformLayout()
+        GroupBox2.ResumeLayout(False)
+        CType(ButtonPreviewBox, ComponentModel.ISupportInitialize).EndInit()
         GroupBox1.ResumeLayout(False)
         GroupBox1.PerformLayout()
         ResumeLayout(False)
@@ -873,5 +909,8 @@ Partial Class Form1
     Friend WithEvents Label2 As Label
     Friend WithEvents errorbut As Button
     Friend WithEvents clickedbut As Button
+    Friend WithEvents GroupBox2 As GroupBox
+    Friend WithEvents ButtonPreviewBox As PictureBox
+    Friend WithEvents Appearance As Button
 
 End Class

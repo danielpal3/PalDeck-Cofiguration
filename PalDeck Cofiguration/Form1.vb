@@ -697,5 +697,32 @@ Public Class Form1
         End If
         ' Enable/disable error panel based on toggle type
         UpdateErrorUIVisibility()
+
+        Dim selectedButtonName As String = ButSelect.Text
+        If selectedButtonName <> "Button select" Then
+            ' Assuming your images are named like: button1.jpg, button2.jpg etc.
+            Dim imagePath As String = IO.Path.Combine(Application.StartupPath, "buttonImages", selectedButtonName.ToLower() & "_default.jpg")
+
+            If File.Exists(imagePath) Then
+                ButtonPreviewBox.Image = Image.FromFile(imagePath)
+            Else
+                ButtonPreviewBox.Image = Nothing ' or a fallback image
+            End If
+
+            ButtonPreviewBox.Visible = True
+        Else
+            ButtonPreviewBox.Visible = False
+            ButtonPreviewBox.Image = Nothing
+        End If
+    End Sub
+
+    Private Sub Appearance_Click(sender As Object, e As EventArgs) Handles Appearance.Click
+        Using ofd As New OpenFileDialog()
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
+            If ofd.ShowDialog() = DialogResult.OK Then
+                ButtonPreviewBox.Image = Image.FromFile(ofd.FileName)
+                UpdatePreview()
+            End If
+        End Using
     End Sub
 End Class
