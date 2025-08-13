@@ -36,6 +36,26 @@ Public Class Form1
     Dim Screens As New List(Of PaldeckScreen)
     Dim CurrentScreenIndex As Integer = -1
 
+    ' ==== PATH HELPERS ====
+    Private Function NormalizeImagePath(stored As String) As String
+        If String.IsNullOrWhiteSpace(stored) Then Return Nothing
+        Dim abs = If(IO.Path.IsPathRooted(stored), stored, IO.Path.Combine(Application.StartupPath, stored))
+        If IO.File.Exists(abs) Then Return abs
+        ' .NET 8 output path shim
+        Dim shim = abs.Replace("\bin\Debug\", "\bin\Debug\net8.0-windows\")
+        If shim <> abs AndAlso IO.File.Exists(shim) Then Return shim
+        ' Fallback to current Presets\Images by filename
+        Dim guess = IO.Path.Combine(Application.StartupPath, "Presets", "Images", IO.Path.GetFileName(stored))
+        If IO.File.Exists(guess) Then Return guess
+        Return Nothing
+    End Function
+
+    Private Function GetSelectedButtonIndex() As Integer
+        ' ButSelect: index 0 is "Button select", then Button1..8
+        If ButSelect Is Nothing OrElse ButSelect.SelectedIndex <= 0 Then Return -1
+        Return ButSelect.SelectedIndex - 1
+    End Function
+
     ' Load project data
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Disable Warning combo boxes by default
@@ -237,11 +257,26 @@ Public Class Form1
             End If
             If customCheck IsNot Nothing Then customCheck.Checked = ButtonData(i).IsCustom
 
-            ButtonPreviewBox.ImageLocation = ButtonData(i).ClickImagePath
-            ButtonPreviewBox.ImageLocation = ButtonData(i).ClickImagePath
-            ButtonPreviewBox.ImageLocation = ButtonData(i).ErrorImagePath
-            ButtonPreviewBox.ImageLocation = ButtonData(i).ErrorImagePath
             PopulateButtonTargets()
+        Next
+
+        ' Populate per-button previews from saved paths (after loop)
+        For i As Integer = 0 To 7
+            Dim cAbs = NormalizeImagePath(ButtonData(i).ClickImagePath)
+            Dim eAbs = NormalizeImagePath(ButtonData(i).ErrorImagePath)
+
+            Dim cpb As PictureBox = TryCast(Me.Controls.Find(String.Format("ClickPreview{0}", i + 1), True).FirstOrDefault(), PictureBox)
+            If cpb IsNot Nothing AndAlso Not String.IsNullOrEmpty(cAbs) Then
+                cpb.ImageLocation = cAbs
+                cpb.Tag = cAbs
+            End If
+
+            Dim found = Me.Controls.Find(String.Format("ErrorPreview{0}", i + 1), True).FirstOrDefault()
+            Dim epb = TryCast(found, PictureBox)
+            If epb IsNot Nothing Then
+                epb.ImageLocation = eAbs
+                epb.Tag = eAbs
+            End If
         Next
     End Sub
     Private Sub AddNewScreen(name As String)
@@ -293,10 +328,10 @@ Public Class Form1
             CustomBut.Text = "Button select"
         End If
         ' Load preview image from saved path (if it exists)
-        If Not String.IsNullOrEmpty(screen.BackgroundImagePath) Then
-            Dim fullPath As String = IO.Path.Combine(Application.StartupPath, screen.BackgroundImagePath)
-            If File.Exists(fullPath) Then
-                Using fs As New FileStream(fullPath, FileMode.Open, FileAccess.Read)
+        If Not String.IsNullOrWhiteSpace(screen.BackgroundImagePath) Then
+            Dim bgAbs As String = NormalizeImagePath(screen.BackgroundImagePath)
+            If Not String.IsNullOrEmpty(bgAbs) Then
+                Using fs As New FileStream(bgAbs, FileMode.Open, FileAccess.Read)
                     PreviewBox.Image = Image.FromStream(fs)
                 End Using
             Else
@@ -326,11 +361,7 @@ Public Class Form1
                 If customCheck IsNot Nothing Then screen.Buttons(i).IsCustom = customCheck.Checked
             Next
 
-            Dim path As String = "paldeck_screens.json"
-            File.WriteAllText(path, JsonConvert.SerializeObject(Screens, Formatting.Indented))
-            UpdateTargetCombosWithScreenNames()
-
-            ' Save relative image path to screen object
+            ' Save relative image path to screen object FIRST (so JSON includes it)
             If PreviewBox.Image IsNot Nothing Then
                 Dim imageFolder = System.IO.Path.Combine(Application.StartupPath, "Presets", "Images")
                 If Not Directory.Exists(imageFolder) Then Directory.CreateDirectory(imageFolder)
@@ -340,14 +371,18 @@ Public Class Form1
                 screen.BackgroundImagePath = System.IO.Path.Combine("Presets", "Images", destName)
             End If
 
+            ' Now write JSON next to the EXE (bin folder)
+            Dim scrPath As String = System.IO.Path.Combine(Application.StartupPath, "paldeck_screens.json")
+            File.WriteAllText(scrPath, JsonConvert.SerializeObject(Screens, Formatting.Indented))
+            UpdateTargetCombosWithScreenNames()
         End If
 
     End Sub
 
     Private Sub LoadScreens()
-        Dim path As String = "paldeck_screens.json"
-        If File.Exists(path) Then
-            Screens = JsonConvert.DeserializeObject(Of List(Of PaldeckScreen))(File.ReadAllText(path))
+        Dim scrPath As String = System.IO.Path.Combine(Application.StartupPath, "paldeck_screens.json")
+        If File.Exists(scrPath) Then
+            Screens = JsonConvert.DeserializeObject(Of List(Of PaldeckScreen))(File.ReadAllText(scrPath))
         End If
         NavArea.Items.Clear()
         For Each screen In Screens
@@ -552,7 +587,10 @@ Public Class Form1
             ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
             If ofd.ShowDialog() = DialogResult.OK Then
                 backgroundimagepath = ofd.FileName
+                PreviewBox.Image = Image.FromFile(ofd.FileName)
                 UpdatePreview()
+                ' Persist immediately so BackgroundImagePath is written to JSON
+                SaveScreens()
             End If
         End Using
     End Sub
@@ -721,8 +759,15 @@ Public Class Form1
         Using ofd As New OpenFileDialog
             ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
             If ofd.ShowDialog = DialogResult.OK Then
+                Dim i As Integer = GetSelectedButtonIndex()
+                If i <> -1 Then
+                    Dim clickPB As PictureBox = TryCast(Me.Controls.Find(String.Format("ClickPreview{0}", i + 1), True).FirstOrDefault(), PictureBox)
+                    If clickPB IsNot Nothing Then
+                        clickPB.ImageLocation = ofd.FileName
+                        clickPB.Tag = ofd.FileName
+                    End If
+                End If
                 ButtonPreviewBox.Image = Image.FromFile(ofd.FileName)
-
             End If
         End Using
     End Sub
@@ -731,9 +776,67 @@ Public Class Form1
         Using ofd As New OpenFileDialog
             ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
             If ofd.ShowDialog = DialogResult.OK Then
+                Dim i As Integer = GetSelectedButtonIndex()
+                If i <> -1 Then
+                    Dim errorPB As PictureBox = TryCast(Me.Controls.Find(String.Format("ErrorPreview{0}", i + 1), True).FirstOrDefault(), PictureBox)
+                    If errorPB IsNot Nothing Then
+                        errorPB.ImageLocation = ofd.FileName
+                        errorPB.Tag = ofd.FileName
+                    End If
+                End If
                 ButtonPreviewBox.Image = Image.FromFile(ofd.FileName)
-
             End If
+        End Using
+    End Sub
+
+    ' View CLICKED state image for the selected button (no file dialog)
+    Private Sub ButtonVCS_Click(sender As Object, e As EventArgs) Handles ButtonVCS.Click
+        Dim i As Integer = GetSelectedButtonIndex()
+        If i = -1 Then
+            MessageBox.Show("Pick a button in 'Button select' first.")
+            Exit Sub
+        End If
+
+        ' Prefer saved path from ButtonData; fall back to preview Tag if not yet saved
+        Dim p As String = ButtonData(i).ClickImagePath
+        If String.IsNullOrWhiteSpace(p) Then
+            Dim cpb As PictureBox = TryCast(Me.Controls.Find($"ClickPreview{i + 1}", True).FirstOrDefault(), PictureBox)
+            If cpb IsNot Nothing AndAlso cpb.Tag IsNot Nothing Then p = CStr(cpb.Tag)
+        End If
+
+        Dim abs As String = NormalizeImagePath(p)
+        If String.IsNullOrWhiteSpace(abs) OrElse Not IO.File.Exists(abs) Then
+            MessageBox.Show("No saved clicked-state image for this button.")
+            Exit Sub
+        End If
+
+        Using fs As New FileStream(abs, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+            ButtonPreviewBox.Image = Image.FromStream(fs)
+        End Using
+    End Sub
+
+    ' View ERROR state image for the selected button (no file dialog)
+    Private Sub ButtonVES_Click(sender As Object, e As EventArgs) Handles ButtonVES.Click
+        Dim i As Integer = GetSelectedButtonIndex()
+        If i = -1 Then
+            MessageBox.Show("Pick a button in 'Button select' first.")
+            Exit Sub
+        End If
+
+        Dim p As String = ButtonData(i).ErrorImagePath
+        If String.IsNullOrWhiteSpace(p) Then
+            Dim epb As PictureBox = TryCast(Me.Controls.Find($"ErrorPreview{i + 1}", True).FirstOrDefault(), PictureBox)
+            If epb IsNot Nothing AndAlso epb.Tag = Not Nothing Then p = CStr(epb.Tag)
+        End If
+
+        Dim abs As String = NormalizeImagePath(p)
+        If String.IsNullOrWhiteSpace(abs) OrElse Not IO.File.Exists(abs) Then
+            MessageBox.Show("No saved error-state image for this button.")
+            Exit Sub
+        End If
+
+        Using fs As New FileStream(abs, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+            ButtonPreviewBox.Image = Image.FromStream(fs)
         End Using
     End Sub
 End Class
