@@ -51,9 +51,20 @@ Public Class Form1
     End Function
 
     Private Function GetSelectedButtonIndex() As Integer
-        ' ButSelect: index 0 is "Button select", then Button1..8
-        If ButSelect Is Nothing OrElse ButSelect.SelectedIndex <= 0 Then Return -1
-        Return ButSelect.SelectedIndex - 1
+        If ButSelect Is Nothing OrElse ButSelect.SelectedItem Is Nothing Then Return -1
+
+        Dim selText As String = ButSelect.SelectedItem.ToString()
+        If String.IsNullOrWhiteSpace(selText) OrElse selText.ToLower().Contains("button select") Then Return -1
+
+        ' Map from selected label text back to the actual Button1..8 control
+        For idx As Integer = 0 To 7
+            Dim btn As Button = TryCast(Me.Controls.Find($"Button{idx + 1}", True).FirstOrDefault(), Button)
+            If btn IsNot Nothing AndAlso String.Equals(btn.Text, selText, StringComparison.OrdinalIgnoreCase) Then
+                Return idx
+            End If
+        Next
+
+        Return -1
     End Function
 
     ' Load project data
@@ -102,10 +113,10 @@ Public Class Form1
         But_8_Target.Tag = 7
         ButSelect.Items.Add("Button select")
         CustomBut.Items.Add("Button select")
+        NavArea.LabelEdit = True
         'Loop buttons by tag and trigger the load project function
         For i As Integer = 0 To 7
             ButtonData(i) = New PaldeckButton()
-            LoadProject()
         Next
 
         'Initialize the preview box
@@ -137,6 +148,10 @@ Public Class Form1
         Else
             LoadScreen(0)
         End If
+
+        ' Load button data once per session from bin
+        LoadProject()
+
         UpdateTargetCombosWithScreenNames()
         PopulateButtonTargets()
 
@@ -180,12 +195,14 @@ Public Class Form1
 
     ' Save project to JSON
     Private Sub SaveProject()
+        ' Ensure array is initialized
         For i As Integer = 0 To 7
             If ButtonData(i) Is Nothing Then
                 ButtonData(i) = New PaldeckButton()
             End If
         Next
 
+        ' Capture current UI state + preview Tags into ButtonData
         For i As Integer = 0 To 7
             Dim modeBox = CType(Me.Controls.Find($"But_{i + 1}_mode", True).FirstOrDefault(), ComboBox)
             Dim targetBox = Me.Controls.Find($"But_{i + 1}_Target", True).FirstOrDefault()
@@ -195,24 +212,23 @@ Public Class Form1
             If targetBox IsNot Nothing Then ButtonData(i).TargetValue = If(TypeOf targetBox Is ComboBox, CType(targetBox, ComboBox).Text, CType(targetBox, TextBox).Text)
             If customCheck IsNot Nothing Then ButtonData(i).IsCustom = customCheck.Checked
 
-            ' Retrieve command input
+            ' Save command input if present
             Dim cmdBox = CType(Me.Controls.Find("CommandBox", True).FirstOrDefault(), TextBox)
             If cmdBox IsNot Nothing Then ButtonData(i).CustomCommand = cmdBox.Text
 
-            ' Save clicked image preview
-            ' New logic for click and error image paths
+            ' Pull image paths from preview Tags if set
             Dim clickPreview = CType(Me.Controls.Find($"ClickPreview{i + 1}", True).FirstOrDefault(), PictureBox)
             Dim errorPreview = CType(Me.Controls.Find($"ErrorPreview{i + 1}", True).FirstOrDefault(), PictureBox)
-
-            If clickPreview IsNot Nothing AndAlso clickPreview.Tag IsNot Nothing Then
-                ButtonData(i).ClickImagePath = clickPreview.Tag.ToString()
-            End If
+            If clickPreview IsNot Nothing AndAlso clickPreview.Tag IsNot Nothing Then ButtonData(i).ClickImagePath = clickPreview.Tag.ToString()
             If errorPreview IsNot Nothing AndAlso errorPreview.Tag IsNot Nothing Then
                 ButtonData(i).ErrorImagePath = errorPreview.Tag.ToString()
             End If
         Next
+
+        ' Write JSON next to the EXE (bin folder)
+        Dim projPath As String = IO.Path.Combine(Application.StartupPath, "paldeck_project.json")
         Dim json As String = JsonConvert.SerializeObject(ButtonData, Formatting.Indented)
-        File.WriteAllText("paldeck_project.json", json)
+        IO.File.WriteAllText(projPath, json)
     End Sub
     ' Load project from JSON
     Private Sub LoadProject()
@@ -220,11 +236,12 @@ Public Class Form1
         Dim targetBox As Control
         Dim customCheck As CheckBox
 
-        If File.Exists("paldeck_project.json") Then
-            Dim json As String = File.ReadAllText("paldeck_project.json")
+        Dim projPath As String = IO.Path.Combine(Application.StartupPath, "paldeck_project.json")
+        If IO.File.Exists(projPath) Then
+            Dim json As String = IO.File.ReadAllText(projPath)
             ButtonData = JsonConvert.DeserializeObject(Of PaldeckButton())(json)
         Else
-            ' Initialize default ButtonData with placeholder values
+            ' Initialize defaults if no file yet
             For i As Integer = 0 To 7
                 ButtonData(i) = New PaldeckButton() With {
                     .Label = "Button " & (i + 1),
@@ -234,11 +251,9 @@ Public Class Form1
             Next
         End If
 
-        ' Ensure all entries are non-null
+        ' Ensure entries non-null
         For i As Integer = 0 To 7
-            If ButtonData(i) Is Nothing Then
-                ButtonData(i) = New PaldeckButton()
-            End If
+            If ButtonData(i) Is Nothing Then ButtonData(i) = New PaldeckButton()
         Next
 
         ' Apply saved UI states
@@ -247,7 +262,11 @@ Public Class Form1
             targetBox = Me.Controls.Find($"But_{i + 1}_Target", True).FirstOrDefault()
             customCheck = CType(Me.Controls.Find($"Custom{i + 1}", True).FirstOrDefault(), CheckBox)
 
-            If modeBox IsNot Nothing Then modeBox.SelectedIndex = ButtonData(i).ModeIndex
+            If modeBox Is Nothing Then
+                'do nothing
+            Else
+                modeBox.SelectedIndex = ButtonData(i).ModeIndex
+            End If
             If targetBox IsNot Nothing Then
                 If TypeOf targetBox Is ComboBox Then
                     CType(targetBox, ComboBox).Text = If(String.IsNullOrEmpty(ButtonData(i).TargetValue), "Target", ButtonData(i).TargetValue)
@@ -255,12 +274,14 @@ Public Class Form1
                     CType(targetBox, TextBox).Text = If(String.IsNullOrEmpty(ButtonData(i).TargetValue), "Target", ButtonData(i).TargetValue)
                 End If
             End If
-            If customCheck IsNot Nothing Then customCheck.Checked = ButtonData(i).IsCustom
-
-            PopulateButtonTargets()
+            If customCheck Is Nothing Then
+                'do nothing
+            Else
+                customCheck.Checked = ButtonData(i).IsCustom
+            End If
         Next
 
-        ' Populate per-button previews from saved paths (after loop)
+        ' Populate per-button previews from saved paths
         For i As Integer = 0 To 7
             Dim cAbs = NormalizeImagePath(ButtonData(i).ClickImagePath)
             Dim eAbs = NormalizeImagePath(ButtonData(i).ErrorImagePath)
@@ -271,9 +292,8 @@ Public Class Form1
                 cpb.Tag = cAbs
             End If
 
-            Dim found = Me.Controls.Find(String.Format("ErrorPreview{0}", i + 1), True).FirstOrDefault()
-            Dim epb = TryCast(found, PictureBox)
-            If epb IsNot Nothing Then
+            Dim epb As PictureBox = TryCast(Me.Controls.Find(String.Format("ErrorPreview{0}", i + 1), True).FirstOrDefault(), PictureBox)
+            If epb IsNot Nothing AndAlso Not String.IsNullOrEmpty(eAbs) Then
                 epb.ImageLocation = eAbs
                 epb.Tag = eAbs
             End If
@@ -709,67 +729,30 @@ Public Class Form1
         ButSelect.SelectedIndex = 0
     End Sub
     Private Sub UpdateErrorUIVisibility()
-        Dim selectedIndex As Integer = ButSelect.SelectedIndex
-        If selectedIndex < 0 Then Exit Sub
+        Dim realIndex As Integer = GetSelectedButtonIndex()
+        If realIndex = -1 Then Exit Sub
 
-        Dim modeBox = CType(Me.Controls.Find($"But_{selectedIndex + 1}_mode", True).FirstOrDefault(), ComboBox)
+        Dim modeBox As ComboBox = TryCast(Me.Controls.Find($"But_{realIndex + 1}_mode", True).FirstOrDefault(), ComboBox)
         If modeBox Is Nothing Then Exit Sub
 
-        Dim isErrorToggle = modeBox.Text.ToLower().Contains("toggle with error")
+        Dim isErrorToggle As Boolean = modeBox.Text.ToLower().Contains("toggle with error")
 
         errorbut.Enabled = isErrorToggle
         timeset.Enabled = isErrorToggle
         Label2.Enabled = isErrorToggle
         Label3.Enabled = isErrorToggle
     End Sub
-
     Private Sub ButSelect_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ButSelect.SelectedIndexChanged
+        Dim realIndex As Integer = GetSelectedButtonIndex()
+        Dim show As Boolean = (realIndex <> -1)
 
-        Dim selectedIndex As Integer = ButSelect.SelectedIndex
-        If selectedIndex < 0 Then
-            clickedbut.Visible = False
-            errorbut.Visible = False
-            Label2.Visible = False
-            Label3.Visible = False
-            timeset.Visible = False
-            Exit Sub
-        End If
+        clickedbut.Visible = show
+        errorbut.Visible = show
+        Label2.Visible = show
+        Label3.Visible = show
+        timeset.Visible = show
 
-        Dim selectedText As String = ButSelect.SelectedItem.ToString()
-
-        ' Show/hide UI based on "Button select" entry
-        If selectedText.ToLower().Contains("button select") Then
-            clickedbut.Visible = False
-            errorbut.Visible = False
-            Label2.Visible = False
-            Label3.Visible = False
-            timeset.Visible = False
-        Else
-            clickedbut.Visible = True
-            errorbut.Visible = True
-            Label2.Visible = True
-            Label3.Visible = True
-            timeset.Visible = True
-        End If
-        ' Enable/disable error panel based on toggle type
-        UpdateErrorUIVisibility()
-
-    End Sub
-    Private Sub clickedbut_Click(sender As Object, e As EventArgs) Handles clickedbut.Click
-        Using ofd As New OpenFileDialog
-            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
-            If ofd.ShowDialog = DialogResult.OK Then
-                Dim i As Integer = GetSelectedButtonIndex()
-                If i <> -1 Then
-                    Dim clickPB As PictureBox = TryCast(Me.Controls.Find(String.Format("ClickPreview{0}", i + 1), True).FirstOrDefault(), PictureBox)
-                    If clickPB IsNot Nothing Then
-                        clickPB.ImageLocation = ofd.FileName
-                        clickPB.Tag = ofd.FileName
-                    End If
-                End If
-                ButtonPreviewBox.Image = Image.FromFile(ofd.FileName)
-            End If
-        End Using
+        If show Then UpdateErrorUIVisibility()
     End Sub
 
     Private Sub errorbut_Click(sender As Object, e As EventArgs) Handles errorbut.Click
@@ -778,8 +761,14 @@ Public Class Form1
             If ofd.ShowDialog = DialogResult.OK Then
                 Dim i As Integer = GetSelectedButtonIndex()
                 If i <> -1 Then
+                    ' persist to data so view works even before saving
+                    ButtonData(i).ErrorImagePath = ofd.FileName
+
+                    ' update per-button preview
                     Dim errorPB As PictureBox = TryCast(Me.Controls.Find(String.Format("ErrorPreview{0}", i + 1), True).FirstOrDefault(), PictureBox)
-                    If errorPB IsNot Nothing Then
+                    If errorPB Is Nothing Then
+                        'do nothing
+                    Else
                         errorPB.ImageLocation = ofd.FileName
                         errorPB.Tag = ofd.FileName
                     End If
@@ -787,6 +776,7 @@ Public Class Form1
                 ButtonPreviewBox.Image = Image.FromFile(ofd.FileName)
             End If
         End Using
+        SaveProject()
     End Sub
 
     ' View CLICKED state image for the selected button (no file dialog)
@@ -839,4 +829,28 @@ Public Class Form1
             ButtonPreviewBox.Image = Image.FromStream(fs)
         End Using
     End Sub
+    Private Sub clickedbut_Click(sender As Object, e As EventArgs) Handles clickedbut.Click
+        Using ofd As New OpenFileDialog
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
+            If ofd.ShowDialog() = DialogResult.OK Then
+                Dim i As Integer = GetSelectedButtonIndex()
+                If i <> -1 Then
+                    ' Persist so View Clicked works immediately (and for JSON on Save)
+                    ButtonData(i).ClickImagePath = ofd.FileName
+
+                    ' Update this button’s small preview + Tag
+                    Dim clickPB As PictureBox = TryCast(Me.Controls.Find(String.Format("ClickPreview{0}", i + 1), True).FirstOrDefault(), PictureBox)
+                    If clickPB IsNot Nothing Then
+                        clickPB.ImageLocation = ofd.FileName
+                        clickPB.Tag = ofd.FileName
+                    End If
+                End If
+
+                ' Show big preview
+                ButtonPreviewBox.Image = Image.FromFile(ofd.FileName)
+            End If
+        End Using
+        SaveProject()
+    End Sub
+
 End Class
