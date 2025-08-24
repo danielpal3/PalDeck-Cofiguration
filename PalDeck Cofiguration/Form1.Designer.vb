@@ -95,6 +95,7 @@ Partial Class Form1
         ButSelect = New ComboBox()
         PresetBox = New ComboBox()
         SavePreset = New Button()
+        Presetname = New TextBox()
         CType(Connectind, ComponentModel.ISupportInitialize).BeginInit()
         PreviewArea.SuspendLayout()
         CType(PreviewBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -816,12 +817,20 @@ Partial Class Form1
         SavePreset.Text = "Save Preset"
         SavePreset.UseVisualStyleBackColor = True
         ' 
+        ' Presetname
+        ' 
+        Presetname.Location = New Point(1187, 639)
+        Presetname.Name = "Presetname"
+        Presetname.Size = New Size(172, 23)
+        Presetname.TabIndex = 56
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1448, 671)
         ControlBox = False
+        Controls.Add(Presetname)
         Controls.Add(SavePreset)
         Controls.Add(PresetBox)
         Controls.Add(GroupBox1)
@@ -852,6 +861,7 @@ Partial Class Form1
         GroupBox1.ResumeLayout(False)
         GroupBox1.PerformLayout()
         ResumeLayout(False)
+        PerformLayout()
     End Sub
     Friend WithEvents Connectind As PictureBox
     Friend WithEvents tryconnect As Timer
@@ -925,5 +935,6 @@ Partial Class Form1
     Friend WithEvents ButtonPreviewBox As PictureBox
     Friend WithEvents ButtonVES As Button
     Friend WithEvents ButtonVCS As Button
+    Friend WithEvents Presetname As TextBox
 
 End Class

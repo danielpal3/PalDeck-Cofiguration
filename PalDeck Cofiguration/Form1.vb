@@ -1,4 +1,8 @@
-﻿Imports System.Threading
+﻿'Paldeck is a creation of Palfrey industries. It is intended to be used as the ultimate upgrade to alternative devices like stream deck.
+'Paldeck is open source so please, feel free to make changes and use as you please.
+
+'Defining imports
+Imports System.Threading
 Imports ICSharpCode.Decompiler.IL
 Imports OBSWebsocketDotNet
 Imports OBSWebsocketDotNet.Types
@@ -10,6 +14,8 @@ Imports System.IO.Ports
 Imports Newtonsoft.Json
 Imports System.Windows.Shapes
 Public Class Form1
+
+    'form level fields
     Dim Client As New OBSWebsocket
     Dim ButtonFilePaths(7) As String
     Dim backgroundimagepath As String
@@ -23,9 +29,10 @@ Public Class Form1
         Public Property ModeIndex As Integer
         Public Property TargetValue As String
         Public Property IsCustom As Boolean
-        Public Property ClickImagePath As String ' base64 string
-        Public Property ErrorImagePath As String   ' base64 string
+        Public Property ClickImagePath As String
+        Public Property ErrorImagePath As String
     End Class
+    'Structure for screen
     Public Class PaldeckScreen
         Public Property ScreenName As String
         Public Property Buttons As PaldeckButton() = New PaldeckButton(7) {}
@@ -38,7 +45,9 @@ Public Class Form1
 
     ' ==== PATH HELPERS ====
     Private Function NormalizeImagePath(stored As String) As String
+        'Check if string contains anything
         If String.IsNullOrWhiteSpace(stored) Then Return Nothing
+        'Define the file path and name
         Dim abs = If(IO.Path.IsPathRooted(stored), stored, IO.Path.Combine(Application.StartupPath, stored))
         If IO.File.Exists(abs) Then Return abs
         ' .NET 8 output path shim
@@ -49,7 +58,6 @@ Public Class Form1
         If IO.File.Exists(guess) Then Return guess
         Return Nothing
     End Function
-
     Private Function GetSelectedButtonIndex() As Integer
         If ButSelect Is Nothing OrElse ButSelect.SelectedItem Is Nothing Then Return -1
 
@@ -183,6 +191,7 @@ Public Class Form1
             ButtonData(selectedIndex).CustomCommand = TextBox1.Text
         End If
     End Sub
+
     Private Sub RemoveCurrentScreen()
         If Screens.Count <= 1 Then
             MessageBox.Show("At least one screen must remain.")
