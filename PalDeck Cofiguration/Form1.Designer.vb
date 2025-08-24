@@ -96,6 +96,7 @@ Partial Class Form1
         PresetBox = New ComboBox()
         SavePreset = New Button()
         Presetname = New TextBox()
+        deletepreset = New Button()
         CType(Connectind, ComponentModel.ISupportInitialize).BeginInit()
         PreviewArea.SuspendLayout()
         CType(PreviewBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -824,12 +825,22 @@ Partial Class Form1
         Presetname.Size = New Size(172, 23)
         Presetname.TabIndex = 56
         ' 
+        ' deletepreset
+        ' 
+        deletepreset.Location = New Point(1314, 97)
+        deletepreset.Name = "deletepreset"
+        deletepreset.Size = New Size(86, 23)
+        deletepreset.TabIndex = 57
+        deletepreset.Text = "Delete Preset"
+        deletepreset.UseVisualStyleBackColor = True
+        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1448, 671)
         ControlBox = False
+        Controls.Add(deletepreset)
         Controls.Add(Presetname)
         Controls.Add(SavePreset)
         Controls.Add(PresetBox)
@@ -936,5 +947,6 @@ Partial Class Form1
     Friend WithEvents ButtonVES As Button
     Friend WithEvents ButtonVCS As Button
     Friend WithEvents Presetname As TextBox
+    Friend WithEvents deletepreset As Button
 
 End Class

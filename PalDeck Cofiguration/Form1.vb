@@ -38,6 +38,12 @@ Public Class Form1
         Public Property Buttons As PaldeckButton() = New PaldeckButton(7) {}
         Public Property BackgroundImagePath As String
     End Class
+    Private Class ScreenPreset
+        Public Property Name As String
+        Public Property BackgroundImagePath As String
+        Public Property Buttons As PaldeckButton()
+    End Class
+
     ' Create an array to hold data for each button
     Dim ButtonData(7) As PaldeckButton
     Dim Screens As New List(Of PaldeckScreen)
@@ -74,9 +80,26 @@ Public Class Form1
 
         Return -1
     End Function
+    Private Function ProfilesDir() As String
+        ' Store inside the app's Presets folder (next to Images etc.)
+        Dim d = IO.Path.Combine(Application.StartupPath, "Presets", "Profiles")
+        If Not IO.Directory.Exists(d) Then IO.Directory.CreateDirectory(d)
+        Return d
+    End Function
+    Private Sub RefreshProfilesList(cmb As ComboBox)
+        Dim dir = ProfilesDir()
+        cmb.Items.Clear()
+        cmb.Items.Add("Load Preset")
+        For Each f In IO.Directory.GetFiles(dir, "*_project.json")
+            Dim name = IO.Path.GetFileName(f).Replace("_project.json", "")
+            cmb.Items.Add(name)
+        Next
+        cmb.SelectedIndex = 0
+    End Sub
 
     ' Load project data
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         'Disable Warning combo boxes by default
         But_1_Target.Enabled = False
         But_2_Target.Enabled = False
@@ -162,6 +185,7 @@ Public Class Form1
 
         UpdateTargetCombosWithScreenNames()
         PopulateButtonTargets()
+        RefreshProfilesList(PresetBox)
 
     End Sub
 
@@ -860,6 +884,241 @@ Public Class Form1
             End If
         End Using
         SaveProject()
+    End Sub
+    ' Allow rename to stick (LabelEdit must be True)
+    Private Sub NavArea_AfterLabelEdit(sender As Object, e As LabelEditEventArgs) Handles NavArea.AfterLabelEdit
+        If e.Label Is Nothing Then Return ' ESC or no change
+
+        Dim newName As String = e.Label.Trim()
+        If newName = "" Then
+            e.CancelEdit = True
+            MessageBox.Show("Name cannot be empty.", "Rename Screen", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        If e.Item < 0 OrElse e.Item >= Screens.Count Then
+            e.CancelEdit = True
+            Return
+        End If
+
+        Dim oldName As String = Screens(e.Item).ScreenName
+        If String.Equals(oldName, newName, StringComparison.OrdinalIgnoreCase) Then Return
+
+        ' Prevent duplicates
+        For i As Integer = 0 To Screens.Count - 1
+            If i <> e.Item AndAlso String.Equals(Screens(i).ScreenName, newName, StringComparison.OrdinalIgnoreCase) Then
+                e.CancelEdit = True
+                MessageBox.Show("A screen with that name already exists.", "Rename Screen", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+        Next
+
+        ' Try to rename the background preview file to keep names tidy
+        Try
+            Dim rel As String = Screens(e.Item).BackgroundImagePath
+            If Not String.IsNullOrWhiteSpace(rel) Then
+                Dim abs As String = If(IO.Path.IsPathRooted(rel), rel, IO.Path.Combine(Application.StartupPath, rel))
+                If IO.File.Exists(abs) Then
+                    Dim folder = IO.Path.GetDirectoryName(abs)
+                    Dim newAbs = IO.Path.Combine(folder, newName & "_preview.png")
+                    IO.File.Copy(abs, newAbs, True)
+                    ' Optional: IO.File.Delete(abs)
+                    Screens(e.Item).BackgroundImagePath = IO.Path.Combine("Presets", "Images", IO.Path.GetFileName(newAbs))
+                End If
+            End If
+        Catch ex As Exception
+            Debug.WriteLine("Background rename failed: " & ex.Message)
+        End Try
+
+        ' Commit new name and persist
+        Screens(e.Item).ScreenName = newName
+        UpdateTargetCombosWithScreenNames()
+        SaveScreens()
+    End Sub
+    Private Function PresetDir() As String
+        Dim d = IO.Path.Combine(Application.StartupPath, "Presets", "Configs")
+        If Not IO.Directory.Exists(d) Then IO.Directory.CreateDirectory(d)
+        Return d
+    End Function
+
+    Private Sub RefreshPresetList(cmb As ComboBox)
+        cmb.Items.Clear()
+        cmb.Items.Add("Load Preset")
+        For Each f In IO.Directory.GetFiles(PresetDir(), "*.paldeck.json")
+            cmb.Items.Add(IO.Path.GetFileNameWithoutExtension(f))
+        Next
+        If cmb.Items.Count > 0 Then cmb.SelectedIndex = 0
+    End Sub
+
+    Private Sub SaveCurrentScreenAsPreset(presetName As String)
+        If CurrentScreenIndex < 0 OrElse CurrentScreenIndex >= Screens.Count Then Return
+        ' Make sure current UI is captured into models
+        SaveCurrentScreen()
+        SaveProject()
+
+        Dim sp As New ScreenPreset With {
+        .Name = presetName,
+        .BackgroundImagePath = Screens(CurrentScreenIndex).BackgroundImagePath,
+        .Buttons = New PaldeckButton(7) {}
+    }
+
+        For i As Integer = 0 To 7
+            Dim src = Screens(CurrentScreenIndex).Buttons(i)
+            sp.Buttons(i) = New PaldeckButton With {
+            .ModeIndex = src.ModeIndex,
+            .TargetValue = src.TargetValue,
+            .IsCustom = src.IsCustom,
+            .ClickImagePath = ButtonData(i).ClickImagePath,
+            .ErrorImagePath = ButtonData(i).ErrorImagePath
+        }
+        Next
+
+        Dim path = IO.Path.Combine(PresetDir(), presetName & ".paldeck.json")
+        IO.File.WriteAllText(path, JsonConvert.SerializeObject(sp, Formatting.Indented))
+    End Sub
+
+    Private Sub LoadPresetByName(presetName As String)
+        Dim file = IO.Path.Combine(PresetDir(), presetName & ".paldeck.json")
+        If Not IO.File.Exists(file) Then
+            MessageBox.Show("Preset not found.")
+            Return
+        End If
+
+        Dim sp = JsonConvert.DeserializeObject(Of ScreenPreset)(IO.File.ReadAllText(file))
+        If CurrentScreenIndex < 0 OrElse CurrentScreenIndex >= Screens.Count Then Return
+
+        ' Apply to models
+        Screens(CurrentScreenIndex).BackgroundImagePath = sp.BackgroundImagePath
+        For i As Integer = 0 To 7
+            Dim src = sp.Buttons(i)
+            Dim sb = Screens(CurrentScreenIndex).Buttons(i)
+            sb.ModeIndex = src.ModeIndex
+            sb.TargetValue = src.TargetValue
+            sb.IsCustom = src.IsCustom
+
+            ButtonData(i).ClickImagePath = src.ClickImagePath
+            ButtonData(i).ErrorImagePath = src.ErrorImagePath
+
+            ' Update small previews immediately
+            Dim cAbs = NormalizeImagePath(src.ClickImagePath)
+            Dim eAbs = NormalizeImagePath(src.ErrorImagePath)
+
+            Dim cpb As PictureBox = TryCast(Me.Controls.Find($"ClickPreview{i + 1}", True).FirstOrDefault(), PictureBox)
+            If cpb IsNot Nothing AndAlso Not String.IsNullOrEmpty(cAbs) Then
+                cpb.ImageLocation = cAbs : cpb.Tag = cAbs
+            End If
+
+            Dim epb As PictureBox = TryCast(Me.Controls.Find($"ErrorPreview{i + 1}", True).FirstOrDefault(), PictureBox)
+            If epb IsNot Nothing AndAlso Not String.IsNullOrEmpty(eAbs) Then
+                epb.ImageLocation = eAbs : epb.Tag = eAbs
+            End If
+        Next
+
+        ' Re-apply background/UI
+        LoadScreen(CurrentScreenIndex)
+        SaveScreens()
+        SaveProject()
+    End Sub
+    Private Sub savepreset_Click(sender As Object, e As EventArgs) Handles SavePreset.Click
+        Dim nm As String = Presetname.Text.Trim()
+        If String.IsNullOrWhiteSpace(nm) Then
+            MessageBox.Show("Please enter a preset name.", "Save Preset")
+            Exit Sub
+        End If
+
+        EnsureSavedActiveConfigs()
+
+        Dim srcProject = IO.Path.Combine(Application.StartupPath, "paldeck_project.json")
+        Dim srcScreens = IO.Path.Combine(Application.StartupPath, "paldeck_screens.json")
+
+        Dim dstDir = ProfilesDir()
+        Dim dstProject = IO.Path.Combine(dstDir, nm & "_project.json")
+        Dim dstScreens = IO.Path.Combine(dstDir, nm & "_screens.json")
+
+        If IO.File.Exists(srcProject) Then IO.File.Copy(srcProject, dstProject, True)
+        If IO.File.Exists(srcScreens) Then IO.File.Copy(srcScreens, dstScreens, True)
+
+        RefreshProfilesList(PresetBox)
+        Dim ix = PresetBox.Items.IndexOf(nm)
+        If ix >= 0 Then PresetBox.SelectedIndex = ix
+    End Sub
+    Private Sub presetBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PresetBox.SelectedIndexChanged
+
+        deletepreset.Enabled = (PresetBox.SelectedIndex > 0)
+
+        If PresetBox.SelectedIndex <= 0 Then Return
+        Dim nm As String = CStr(PresetBox.SelectedItem)
+
+        Dim srcProject = IO.Path.Combine(ProfilesDir(), nm & "_project.json")
+        Dim srcScreens = IO.Path.Combine(ProfilesDir(), nm & "_screens.json")
+        Dim dstProject = IO.Path.Combine(Application.StartupPath, "paldeck_project.json")
+        Dim dstScreens = IO.Path.Combine(Application.StartupPath, "paldeck_screens.json")
+
+        If Not IO.File.Exists(srcProject) AndAlso Not IO.File.Exists(srcScreens) Then
+            MessageBox.Show("Preset files not found.", "Load Preset")
+            Return
+        End If
+
+        If IO.File.Exists(srcProject) Then IO.File.Copy(srcProject, dstProject, True)
+        If IO.File.Exists(srcScreens) Then IO.File.Copy(srcScreens, dstScreens, True)
+
+        ' Reload your existing state
+        LoadScreens()
+        If Screens.Count = 0 Then
+            AddNewScreen("Default")
+        Else
+            LoadScreen(0)
+        End If
+        LoadProject()
+        UpdateTargetCombosWithScreenNames()
+        PopulateButtonTargets()
+    End Sub
+    ' Make sure current UI state is saved to JSON before copying presets
+    Private Sub EnsureSavedActiveConfigs()
+        ' These already exist in your project
+        SaveCurrentScreen()
+        SaveScreens()
+        SaveProject()
+    End Sub
+    ' Put this inside your Form class (alongside the other helpers)
+    Private Sub DeletePresetByName(presetName As String)
+        Dim proj = IO.Path.Combine(ProfilesDir(), presetName & "_project.json")
+        Dim scr = IO.Path.Combine(ProfilesDir(), presetName & "_screens.json")
+
+        ' Use Recycle Bin for safer deletes
+        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+        proj,
+        Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+        Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin
+    )
+        Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+        scr,
+        Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+        Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin
+    )
+
+        ' Refresh UI list and reset selection
+        RefreshProfilesList(PresetBox)
+        PresetBox.SelectedIndex = 0
+    End Sub
+    ' Wire this normally with Handles so there’s no AddHandler/lambda fuss
+    Private Sub deletepreset_Click(sender As Object, e As EventArgs) Handles deletepreset.Click
+        If PresetBox.SelectedIndex <= 0 Then
+            MessageBox.Show("Select a preset to delete.", "Delete Preset")
+            Return
+        End If
+
+        Dim name As String = CStr(PresetBox.SelectedItem)
+        If MessageBox.Show($"Delete preset '{name}'?", "Delete Preset",
+                       MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes Then
+            ' Best-effort: ignore if files are already missing
+            Try
+                DeletePresetByName(name)
+            Catch ex As Exception
+                MessageBox.Show("Couldn't delete preset files. They may be open or locked." & Environment.NewLine & ex.Message,
+                            "Delete Preset", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End If
     End Sub
 
 End Class
