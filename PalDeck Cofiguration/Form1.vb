@@ -13,6 +13,7 @@ Imports System.Runtime.InteropServices
 Imports System.IO.Ports
 Imports Newtonsoft.Json
 Imports System.Windows.Shapes
+Imports System.Collections.Specialized
 Public Class Form1
 
     'form level fields
@@ -721,10 +722,14 @@ Public Class Form1
             If cb IsNot Nothing Then
                 cb.Items.Clear()
 
+                If My.Settings.Scenes Is Nothing Then My.Settings.Scenes = New StringCollection()
+                My.Settings.Scenes.Clear()
                 ' Add OBS scenes
                 For Each scene In Client.ListScenes
                     cb.Items.Add(scene.Name.ToString)
-                Next
+                    My.Settings.Scenes.Add(scene.Name.ToString)
+                                Next
+                My.Settings.Save()
 
                 ' Add Paldeck screen names, excluding current
                 For Each screen In Screens
@@ -1278,5 +1283,71 @@ Public Class Form1
         End While
     End Sub
     ' ===== end variant helpers =====
+    Private Function IsSceneFromSettings(name As String) As Boolean
+        If String.IsNullOrWhiteSpace(name) Then Return False
+        If My.Settings.Scenes Is Nothing Then Return False
+        Return My.Settings.Scenes.Cast(Of String)() _
+            .Any(Function(s) String.Equals(s, name, StringComparison.OrdinalIgnoreCase))
+    End Function
 
+    Private _buildChoiceMadeForPage As Boolean = False
+    Private _reentryGuard As Boolean = False
+
+    Private Sub sceneCombo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles But_1_Target.SelectionChangeCommitted,
+    But_2_Target.SelectionChangeCommitted, But_3_Target.SelectionChangeCommitted, But_4_Target.SelectionChangeCommitted, But_5_Target.SelectionChangeCommitted,
+    But_6_Target.SelectionChangeCommitted, But_7_Target.SelectionChangeCommitted, But_8_Target.SelectionChangeCommitted
+        Dim cb = DirectCast(sender, ComboBox)
+        Dim picked As String = If(cb.SelectedItem?.ToString(), "")
+        If String.IsNullOrEmpty(picked) Then Exit Sub
+
+        Dim msg = $"'{picked}' looks like an OBS scene." & vbCrLf &
+              "Do you want to auto-generate this page's buttons from your OBS scenes?" & vbCrLf & vbCrLf &
+              "Yes = Auto-generate" & vbCrLf &
+              "No  = Manual setup"
+        Dim r = MessageBox.Show(msg, "Build buttons for this page?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
+        _reentryGuard = False
+
+        Select Case r
+            Case DialogResult.Yes
+                _buildChoiceMadeForPage = True
+                StartAutoGenerateForPage()
+            Case DialogResult.No
+                _buildChoiceMadeForPage = True
+                SetPageManual()
+            Case Else
+                ' Cancel → do nothing
+        End Select
+    End Sub
+    ' --- stubs you can wire to your existing code ---
+
+    Private Sub StartAutoGenerateForPage()
+        ' Use OBS list if connected, else fallback to My.Settings
+        Dim names As List(Of String)
+        Try
+            If Client IsNot Nothing AndAlso Client.IsConnected Then
+                names = Client.ListScenes.Select(Function(s) s.Name.ToString()).ToList()
+            Else
+                names = If(My.Settings.Scenes, New StringCollection()).
+                    Cast(Of String)().ToList()
+            End If
+        Catch
+            names = If(My.Settings.Scenes, New StringCollection()).
+                Cast(Of String)().ToList()
+        End Try
+
+        ' TODO: replace with your actual SceneAutoBuildDialog
+        ' For now, just confirm it fires:
+        MessageBox.Show($"Auto-generate wizard would open here with {names.Count} scenes.", "Auto Generate")
+        ' Example future call:
+        ' Using dlg As New SceneAutoBuildDialog(names)
+        '   If dlg.ShowDialog(Me) = DialogResult.OK Then BuildAndRenderSceneButtons(dlg.GetResult().SelectedScenesInOrder, borderColor, borderSize, textPad)
+        ' End Using
+    End Sub
+
+    Private Sub SetPageManual()
+        ' Flip whatever flag you use for page mode and save
+        ' CurrentPage.Mode = "manual"
+        MessageBox.Show("Manual mode set for this page. Add buttons yourself.", "Manual")
+        ' SaveProject()
+    End Sub
 End Class
