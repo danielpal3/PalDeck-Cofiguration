@@ -262,6 +262,7 @@ Public Class Form1
         Dim projPath As String = IO.Path.Combine(Application.StartupPath, "paldeck_project.json")
         Dim json As String = JsonConvert.SerializeObject(ButtonData, Formatting.Indented)
         IO.File.WriteAllText(projPath, json)
+        GenerateVariantsForCurrentScreen()
     End Sub
     ' Load project from JSON
     Private Sub LoadProject()
@@ -1120,5 +1121,162 @@ Public Class Form1
             End Try
         End If
     End Sub
+    ''=====================================================================HELPERS=============================================================================
+    ' ===== Variant helpers =====
+
+    ' 0=fixed, 2=toggle, 3=toggle-with-error, read from the mode dropdown text
+    Private Function ButtonRadix(i As Integer) As Integer
+        Dim modeBox = TryCast(Me.Controls.Find($"But_{i + 1}_mode", True).FirstOrDefault(), ComboBox)
+        If modeBox Is Nothing OrElse modeBox.Text Is Nothing Then Return 0
+        Dim t = modeBox.Text.Trim().ToLowerInvariant()
+        If t.Contains("toggle with error") Then Return 3
+        If t.Contains("toggle") Then Return 2
+        Return 0
+    End Function
+
+    ' For phase: 0=normal, 1=toggled/clicked, 2=error (falls back if missing)
+    Private Function ResolveButtonImagePath(i As Integer, phase As Integer) As String
+        If i < 0 OrElse i > 7 Then Return Nothing
+        Dim btn = ButtonData(i)
+        If btn Is Nothing Then Return Nothing
+
+        Select Case phase
+            Case 2
+                If Not String.IsNullOrWhiteSpace(btn.ErrorImagePath) Then
+                    Dim p = NormalizeImagePath(btn.ErrorImagePath)
+                    If Not String.IsNullOrWhiteSpace(p) AndAlso IO.File.Exists(p) Then Return p
+                End If
+            Case 1
+                If Not String.IsNullOrWhiteSpace(btn.ClickImagePath) Then
+                    Dim p = NormalizeImagePath(btn.ClickImagePath)
+                    If Not String.IsNullOrWhiteSpace(p) AndAlso IO.File.Exists(p) Then Return p
+                End If
+        End Select
+
+        ' Normal fallback (use your base image if you store it in FilePath)
+        If Not String.IsNullOrWhiteSpace(btn.FilePath) Then
+            Dim p = NormalizeImagePath(btn.FilePath)
+            If Not String.IsNullOrWhiteSpace(p) AndAlso IO.File.Exists(p) Then Return p
+        End If
+
+        Return Nothing
+    End Function
+
+    Private Function VariantsImagesDir() As String
+        Dim d = IO.Path.Combine(Application.StartupPath, "Presets", "Images")
+        If Not IO.Directory.Exists(d) Then IO.Directory.CreateDirectory(d)
+        Return d
+    End Function
+
+    ' Build "00120000" (8 chars) for current state vector
+    Private Function BuildStateKey(state() As Integer) As String
+        Dim sb As New System.Text.StringBuilder(8)
+        For i = 0 To 7
+            Dim v = Math.Max(0, Math.Min(2, state(i)))
+            sb.Append(ChrW(AscW("0"c) + v))
+        Next
+        Return sb.ToString()
+    End Function
+
+    ' Render one composite and save as <ScreenName>_<key>.png (e.g., Main_00120000.png)
+    Private Sub RenderAndSaveVariant(state() As Integer)
+        If CurrentScreenIndex < 0 OrElse CurrentScreenIndex >= Screens.Count Then Exit Sub
+        Dim screen = Screens(CurrentScreenIndex)
+        Dim key = BuildStateKey(state)
+        Dim outPath = IO.Path.Combine(VariantsImagesDir(), $"{screen.ScreenName}_{key}.png")
+
+        Using bmp As New Bitmap(PreviewBox.Width, PreviewBox.Height)
+            Using g As Graphics = Graphics.FromImage(bmp)
+                g.Clear(Color.Black)
+
+                ' Background
+                If Not String.IsNullOrWhiteSpace(screen.BackgroundImagePath) Then
+                    Dim bgAbs = NormalizeImagePath(screen.BackgroundImagePath)
+                    If Not String.IsNullOrWhiteSpace(bgAbs) AndAlso IO.File.Exists(bgAbs) Then
+                        Using bg As Image = Image.FromFile(bgAbs)
+                            g.DrawImage(bg, 0, 0, bmp.Width, bmp.Height)
+                        End Using
+                    End If
+                End If
+
+                ' Layout — keep identical to your UpdatePreview
+                Dim buttonWidth As Integer = 106
+                Dim buttonHeight As Integer = 83
+                Dim paddingTop As Integer = 10
+                Dim paddingBottom As Integer = 10
+                Dim spacing As Integer = 11   ' (rounded from 11.3)
+                Dim paddingLeft As Integer = 11
+
+                ' Top row (0..3)
+                For i As Integer = 0 To 3
+                    Dim p = ResolveButtonImagePath(i, state(i))
+                    If Not String.IsNullOrWhiteSpace(p) Then
+                        Using img As Image = Image.FromFile(p)
+                            Dim x = paddingLeft + i * (buttonWidth + spacing)
+                            Dim y = paddingTop
+                            g.DrawImage(img, x, y, buttonWidth, buttonHeight)
+                        End Using
+                    End If
+                Next
+
+                ' Bottom row (4..7)
+                For i As Integer = 4 To 7
+                    Dim p = ResolveButtonImagePath(i, state(i))
+                    If Not String.IsNullOrWhiteSpace(p) Then
+                        Using img As Image = Image.FromFile(p)
+                            Dim x = paddingLeft + (i - 4) * (buttonWidth + spacing)
+                            Dim y = bmp.Height - buttonHeight - paddingBottom
+                            g.DrawImage(img, x, y, buttonWidth, buttonHeight)
+                        End Using
+                    End If
+                Next
+            End Using
+
+            ' Atomic write
+            Dim tmp = outPath & ".tmp"
+            bmp.Save(tmp, Imaging.ImageFormat.Png)
+            If IO.File.Exists(outPath) Then IO.File.Delete(outPath)
+            IO.File.Move(tmp, outPath)
+        End Using
+    End Sub
+
+    ' Enumerate all valid combinations (0/1/2 by each button’s mode) and render
+    Private Sub GenerateVariantsForCurrentScreen(Optional maxVariants As Integer = 1000)
+        If CurrentScreenIndex < 0 OrElse CurrentScreenIndex >= Screens.Count Then Exit Sub
+
+        ' Per-slot radix (0=fixed, 2=toggle, 3=toggle+error)
+        Dim radix(7) As Integer
+        For i = 0 To 7
+            radix(i) = ButtonRadix(i)
+        Next
+
+        ' Mixed-radix enumeration, guarded by maxVariants
+        Dim state(7) As Integer   ' starts all 0
+        Dim built As Integer = 0
+        Dim done As Boolean = False
+
+        While Not done AndAlso built < maxVariants
+            RenderAndSaveVariant(state)
+            built += 1
+
+            ' Increment state vector
+            Dim carry = True
+            For i = 0 To 7
+                If Not carry Then Exit For
+                Select Case radix(i)
+                    Case 0
+                    ' fixed at 0; keep carry to next position
+                    Case 2
+                        state(i) += 1
+                        If state(i) >= 2 Then state(i) = 0 Else carry = False
+                    Case 3
+                        state(i) += 1
+                        If state(i) >= 3 Then state(i) = 0 Else carry = False
+                End Select
+                If i = 7 AndAlso carry Then done = True
+            Next
+        End While
+    End Sub
+    ' ===== end variant helpers =====
 
 End Class
